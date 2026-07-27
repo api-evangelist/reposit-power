@@ -1,0 +1,2147 @@
+openapi: 3.0.1
+info:
+  title: Reposit Power Market API
+  description: |
+    Documentation for the Reposit Power Market API. Used by fleet.repositpower.com and related services.
+    Please review our [versioning and support policy](https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31) before using the API.
+  contact:
+    url: https://www.repositpower.com/
+    email: api@repositpower.com
+  version: 1.0.0
+servers:
+- url: https://marketapi.repositpower.com/
+tags:
+- name: Node
+  description: API end-points related to deployments.
+- name: Power Station
+  description: API end-points related to powerstations.
+- name: Data
+  description: API end-points related to obtaining metric data.
+- name: Curtailment
+  description: API end-points related to export curtailments.
+- name: Dispatch
+  description: API end-points related to export dispatches.
+- name: Network
+  description: Indicates this API end-point is available to network organisations.
+- name: Retailer
+  description: Indicates this API end-point is available to retailer organisations.
+- name: Management
+  description: End-points relating to the management of your Reposit Fleet and marketapi
+    account.
+- name: Users
+  description: End-points relating to the management of your Reposit Fleet and marketapi
+    users.
+paths:
+  /api/nodes:
+    get:
+      tags:
+      - Node
+      - Network
+      - Retailer
+      - Installer
+      summary: All Nodes
+      description: Return basic information and URLs on how to obtain more information
+        about nodes. Each URL can also be expanded in place using the `expand` URL
+        parameter
+      parameters:
+      - name: expand
+        in: query
+        description: |
+          Any property that contains a URL path rather than data can be expanded in place using the expand query string parameter. This is a CSV list of each property name which should be expanded. e.g. `?expand=network,address`
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            Default response:
+              example:
+                data:
+                - address: /api/nodes/bdeea25eb01b460da11e9208007ec2e5/address
+                  id: bdeea25eb01b460da11e9208007ec2e5
+                  network: /api/nodes/bdeea25eb01b460da11e9208007ec2e5/network
+                  status: /api/nodes/bdeea25eb01b460da11e9208007ec2e5/status
+                  namePlate: /api/nodes/bdeea25eb01b460da11e9208007ec2e5/namePlate
+                - address": /api/nodes/521444180bee43bda8e51ffe8a64c9bc/address
+                  id: 521444180bee43bda8e51ffe8a64c9bc
+                  network: /api/nodes/521444180bee43bda8e51ffe8a64c9bc/network
+                  status: /api/nodes/521444180bee43bda8e51ffe8a64c9bc/status
+                  namePlate: /api/nodes/521444180bee43bda8e51ffe8a64c9bc/namePlate
+                status: OK
+            Fully Expanded Response (?expand=address,network,status,system):
+              example:
+                data:
+                - address:
+                    city: Canberra
+                    country: Australia
+                    lat: -35.333502
+                    lng: 149.170508
+                    postcode: "2609"
+                    state: ACT
+                    street: Yallourn Street
+                    street_number: 17/2
+                  id: bdeea25eb01b460da11e9208007ec2e5
+                  network:
+                    nmi: "10000200030"
+                  status:
+                    operationalStatus:
+                      lastTimestamp: 1505695466
+                      lastValue: 0
+                    ping:
+                      lastTimestamp: 1505695468
+                  namePlate:
+                    batteryCapacity: 6.4
+                    inverterPower: 3
+                    batteryPower: 2
+                status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/nodes/{nodeId}/address:
+    get:
+      tags:
+      - Node
+      - Network
+      - Retailer
+      - Installer
+      summary: Address/Location Info
+      description: Return full address and lat/long information of a node.
+      parameters:
+      - name: nodeId
+        in: path
+        description: The ID of the node.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    city: Turner
+                    country: Australia
+                    lat: -35.26671
+                    lng: 149.12879
+                    postcode: "2612"
+                    state: ACT
+                    street: Macleay St
+                    street_number: "52"
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/nodes/{nodeId}/network:
+    get:
+      tags:
+      - Node
+      - Network
+      - Retailer
+      - Installer
+      summary: Network Info
+      description: Returns the NMI for this node.
+      parameters:
+      - name: nodeId
+        in: path
+        description: The ID of the node.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    nmi: 4102000000
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/nodes/{nodeId}/status:
+    get:
+      tags:
+      - Node
+      - Network
+      - Retailer
+      - Installer
+      summary: Operational Status
+      description: Returns the latest operational status information for this node.
+      parameters:
+      - name: nodeId
+        in: path
+        description: The ID of the node.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    operationalStatus:
+                      lastTimestamp: 1505189841
+                      lastValue: 0
+                    ping:
+                      lastTimestamp: 1505189845
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/nodes/{nodeId}/namePlate:
+    get:
+      tags:
+      - Node
+      - Network
+      - Retailer
+      - Installer
+      summary: Name Plate
+      description: Returns information about the energy system attached to this node.
+      parameters:
+      - name: nodeId
+        in: path
+        description: The ID of the node.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    batteryCapacity: 6.4
+                    inverterPower: 3
+                    batteryPower: 2
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/nodes/{nodeId}/events:
+    get:
+      tags:
+      - Node
+      - Network
+      - Retailer
+      - Installer
+      summary: Name Plate
+      description: Returns events and changes in state to this node sorted by time
+        descending. This will only return the first 100 results by default, as the
+        number of results can be quite large. Therefore you must use the `limit` and
+        `offset` parameters as specified below to retrieve either all results, or
+        a page at a time. This endpoint only returns basic information; more details
+        can be retrieved from the endpoint specific to that event type, e.g. from
+        `/api/dispatches`
+      parameters:
+      - name: nodeId
+        in: path
+        description: The ID of the node.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: An integer to offset the results by - to use for paging through
+          the total results. If limit is specified, this is set to 0 by default.
+        schema:
+          type: number
+      - name: limit
+        in: query
+        description: An integer to limit the results by - to use for paging through
+          the total results. By default this is 100, or the maximum number of results
+          (whichever is lower).
+        schema:
+          type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                  - description: Network Support
+                    duration: 3600
+                    eventType: DISPATCH
+                    id: b02067ae-d274-4d75-a00b-81a78184e987
+                    ts: 1523430000
+                  - description: Network Support
+                    duration: 3600
+                    eventType: DISPATCH
+                    id: 64948b88-7af5-49a7-9b04-e0055419eaf8
+                    ts: 1517547600
+                  - description: The Reposit System was commissioned.
+                    eventType: COMMISSIONED
+                    ts: 1511204358
+                  meta:
+                    count: 6
+                    previous: https://marketapi.repositpower.com/api/nodes/5b0a63855f2f4f819ccda226ca9d14e8/events?limit=3&offset=0
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/powerstations:
+    get:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      summary: All Power Stations
+      description: Returns a list of power stations associated with the currently
+        authenticated user's organisation.
+      parameters:
+      - name: includePredictions
+        in: query
+        description: Optional. Set to `true` to include powerstation predictions in
+          the response.
+        schema:
+          type: string
+          enum:
+          - "true"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                  - id: e7430ccb21644d7b9e0a443933f25c7f
+                    name: New Powerstation on dmarket
+                    namePlate:
+                      capacity: 17.1
+                      power: 13
+                    nodes:
+                    - d4c58e243e694bba9e57cbdf42970faf
+                    - 5320123eac5e4fd5baaea0bf442659bb
+                  - description: A sample powerstation for dispatches
+                    id: 3561817084be49c0b77d7d65903792ff
+                    name: Sample One
+                    namePlate:
+                      batteryCapacity: 29.0
+                      batteryPower: 16.3
+                      inverterPower: 18.5
+                    nodes:
+                    - 5320123eac5e4fd5baaea0bf442659bb
+                    - e720e221204149ec9fa172583bcf4258
+                    - d4c58e243e694bba9e57cbdf42970faf
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+    post:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      summary: Create Power Station
+      description: Creates a new powerstation and returns its details.
+      requestBody:
+        description: The powerstation to create.
+        content:
+          application/json:
+            schema:
+              required:
+              - name
+              - nodes
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: A recognisable name to give this powerstation.
+                description:
+                  type: string
+                  description: An option description of this powerstation
+                type:
+                  type: string
+                  description: The type of powerstation, either STATIC for a specified
+                    list of node IDs or DYNAMIC to suply a filter. When using DYNAMIC
+                    ans supplying a filter the powerstation will automatically add
+                    any nodes that match the filter criteria.
+                  default: STATIC
+                  enum:
+                  - STATIC
+                  - DYNAMIC
+                nodes:
+                  type: array
+                  description: An array of node IDs that belong to this powerstation
+                    if the powerstation type is STATIC. Otherwise this must be null
+                  items:
+                    type: string
+                filters:
+                  type: object
+                  properties:
+                    postcodes:
+                      type: array
+                      description: An array of postcodes that a node can be in for
+                        it to be included in this powerstation.
+                      items:
+                        type: string
+                    state:
+                      type: string
+                      description: The state or territory that a node must be in for
+                        it to be included in this powerstation.
+                      enum:
+                      - ACT
+                      - NSW
+                      - NT
+                      - QLD
+                      - SA
+                      - TAS
+                      - VIC
+                      - WA
+                  description: When specifying a DYNAMIC powerstation type you must
+                    also supply the filters that this powerstation is built from.
+              example:
+                name: My First Powerstation
+                nodes:
+                - f7b05c5632334403ac0895959f8d00e7
+                - 4f0cf230c728478da0822aa7f2d1f9ef
+                - 56af6a12ae9049298aaa38cde5781145
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      namePlate:
+                        type: object
+                        properties:
+                          batteryCapacity:
+                            type: number
+                          batteryPower:
+                            type: number
+                          inverterPower:
+                            type: number
+                      nodes:
+                        type: array
+                        description: A list of nodes IDs that make up this powerstation.
+                        items:
+                          type: string
+                  status:
+                    type: string
+                example:
+                  data:
+                    id: e7430ccb21644d7b9e0a443933f25c7f
+                    name: My First Powerstation
+                    namePlate:
+                      batteryCapacity: 17.1
+                      batteryPower: 11
+                      inverterPower: 13
+                    nodes:
+                    - f7b05c5632334403ac0895959f8d00e7
+                    - 4f0cf230c728478da0822aa7f2d1f9ef
+                    - 56af6a12ae9049298aaa38cde5781145
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: powerstation
+  /api/powerstations/{powerstationId}:
+    get:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      summary: Get Single Power Station
+      description: Returns the details of the power station with the supplied UID.
+      parameters:
+      - name: powerstationId
+        in: path
+        description: The ID of the power station.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      namePlate:
+                        type: object
+                        properties:
+                          capacity:
+                            type: number
+                          power:
+                            type: number
+                      nodes:
+                        type: array
+                        items:
+                          type: string
+                  status:
+                    type: string
+                example:
+                  data:
+                    id: e7430ccb21644d7b9e0a443933f25c7f
+                    name: New Powerstation on dmarket
+                    namePlate:
+                      capacity: 17.1
+                      power: 13
+                    nodes:
+                    - d4c58e243e694bba9e57cbdf42970faf
+                    - 5320123eac5e4fd5baaea0bf442659bb
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+        404:
+          description: Invalid powerstation UID specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Powerstation e7430ccb21644d7b9e0a443933f25c7f not found
+                  status: ERROR
+      security:
+      - AccessToken: []
+    put:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      summary: Update Power Station
+      description: Updates an existing powerstation specified by its id and returns
+        its details.
+      parameters:
+      - name: powerstationId
+        in: path
+        description: The ID of the power station.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The powerstation to update.
+        content:
+          application/json:
+            schema:
+              required:
+              - name
+              - nodes
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                  description: An option description of this powerstation
+                nodes:
+                  type: array
+                  description: A list of nodes IDs that make up this powerstation.
+                  items:
+                    type: string
+              example:
+                name: My First Powerstation
+                nodes:
+                - f7b05c5632334403ac0895959f8d00e7
+                - 4f0cf230c728478da0822aa7f2d1f9ef
+                - 56af6a12ae9049298aaa38cde5781145
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      namePlate:
+                        type: object
+                        properties:
+                          capacity:
+                            type: number
+                          power:
+                            type: number
+                      nodes:
+                        type: array
+                        items:
+                          type: string
+                  status:
+                    type: string
+                example:
+                  data:
+                    id: e7430ccb21644d7b9e0a443933f25c7f
+                    name: My First Powerstation
+                    namePlate:
+                      capacity: 17.1
+                      power: 13
+                    nodes:
+                    - f7b05c5632334403ac0895959f8d00e7
+                    - 4f0cf230c728478da0822aa7f2d1f9ef
+                    - 56af6a12ae9049298aaa38cde5781145
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+        404:
+          description: Invalid powerstation ID specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Powerstation e7430ccb21644d7b9e0a443933f25c7f not found
+                  status: ERROR
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: powerstation
+    delete:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      summary: Delete Power Station
+      description: Deletes a powerstation with with the supplied ID.
+      parameters:
+      - name: powerstationId
+        in: path
+        description: The ID of the power station.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                example:
+                  status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+        404:
+          description: Invalid powerstation ID specified.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: Powerstation e7430ccb21644d7b9e0a443933f25c7f not found
+                  status: ERROR
+      security:
+      - AccessToken: []
+  /api/powerstations/{powerstationId}/data:
+    get:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      - Data
+      summary: Data - Downsampled
+      description: Return stored metrics for this powerstation or its nodes by downsampling.
+      parameters:
+      - name: powerstationId
+        in: path
+        description: The ID of the power station.
+        required: true
+        schema:
+          type: string
+      - name: metrics
+        in: query
+        description: |
+          This returns downsampled data of metrics for this powerstation.
+
+          Timestamps in the response refer to the start of the period.
+
+          The metrics to retreive as a comma separated list of any combination of the following:
+          - meterVoltage - The average voltage (V) across all phases as measured at the meter/grid
+          - meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid
+          - meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid
+          - meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid
+          - solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array
+          - solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array
+          - remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system
+          - batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system
+          - inverterReactivePower - The total (sum) reactive power (var) measured at the inverter
+          - inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter
+          - meterCurrent - The total (sum) current (Amp) measured at the meter/grid
+
+          All real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.
+
+          If ?format=nodes is specified then you may also request the data to be split by phases by adding a phase letter after the metric name, for example `meterVoltage{a}`. These can be combined to request multiple phases, for example `meterVoltage{a|b}`. Or you can request all phases with an asterix, for example `meterVoltage{*}`. Note that `meterVoltage{*}` is equivalent to `meterVoltage{a|b|c}`. If a phase is specified the above average/sum  aggregation will not be applied and instead you will get back the value for just the specified phase(s).
+
+          Phase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.
+
+          Please note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: The start timestamp of the period of data you wish to retreive
+        schema:
+          type: integer
+      - name: end
+        in: query
+        description: The end timestamp of the period of data you wish to retreive
+        schema:
+          type: integer
+      - name: interval
+        in: query
+        description: The downsampling interval in seconds
+        schema:
+          type: integer
+      - name: format
+        in: query
+        description: The format you wish to retrieve the results, either `powerstation` or `nodes`.
+          When using nodes, requests are limited to a 6 hour window of data; for powerstation, requests are limited to a 1 week window of data.
+        schema:
+          type: string
+          default: powerstation
+          enum:
+          - powerstation
+          - nodes
+      - name: fill
+        in: query
+        description: The fill policy to use for empty values. By default any empty
+          values for a deployment (i.e. a missing chuck of data) are ommitted. Specify
+          `fill=null` to return all times with null values if the data is missing.
+          Only `null` is supported.
+        schema:
+          type: string
+          enum:
+          - null
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            By powerstation:
+              example:
+                data:
+                - meterPower{a}:
+                    1505109600: 0.3857383972607584
+                    1505111400: 0.3806250010513597
+                - meterPower{b}:
+                    1505109600: 0.3849693243306107
+                    1505111400: 0.3857383972607584
+                - meterVoltage:
+                    1505109600: 244.3849693243306
+                    1505111400: 245.38573839726075
+                status: OK
+            By nodes:
+              example:
+                data:
+                - meterPower{a}:
+                    d4c58e243e694bba9e57cbdf42970faf:
+                      1505109600: 0.3857383972607584
+                      1505111400: 0.3806250010513597
+                    e720e221204149ec9fa172583bcf4258:
+                      1505109600: 0.3849693243306107
+                      1505111400: 0.3580208346247673
+                - meterPower{b}:
+                    d4c58e243e694bba9e57cbdf42970faf:
+                      1505109600: 0.3857383972607584
+                      1505111400: 0.3806250010513597
+                    e720e221204149ec9fa172583bcf4258:
+                      1505109600: 0.3849693243306107
+                      1505111400: 0.3580208346247673
+                - meterVoltage:
+                    d4c58e243e694bba9e57cbdf42970faf:
+                      1505109600: 244.38573839726075
+                      1505111400: 244.38062500105136
+                    e720e221204149ec9fa172583bcf4258:
+                      1505109600: 245.3849693243306
+                      1505111400: 245.35802083462477
+                status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/powerstations/{powerstationId}/data/raw:
+    get:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      - Data
+      summary: Data - Raw
+      description: Return stored metrics for this powerstation or its nodes without
+        applying any downsampling.
+      parameters:
+      - name: powerstationId
+        in: path
+        description: The ID of the power station.
+        required: true
+        schema:
+          type: string
+      - name: metrics
+        in: query
+        description: |
+          This returns raw data of metrics for this powerstation as collected by each device.
+
+          Timestamps in the response refer to the time at which the data was sampled.
+
+          No guarantees can be made about aligned data. e.g. meterPower may be collected at slightly different times per phases, and meterPower might be collected at a different time than meterVoltage.
+
+          The metrics to retreive as a comma separated list of any combination of the following:
+          - meterVoltage - The average voltage (V) across all phases as measured at the meter/grid
+          - meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid
+          - meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid
+          - meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid
+          - solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array
+          - solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array
+          - remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system
+          - batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system
+          - inverterReactivePower - The total (sum) reactive power (var) measured at the inverter
+          - inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter
+          - meterCurrent - The total (sum) current (Amp) measured at the meter/grid
+
+          All real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.
+
+          If ?format=nodes is specified then you may also request the data to be split by phases by adding a phase letter after the metric name, for example `meterVoltage{a}`. These can be combined to request multiple phases, for example `meterVoltage{a|b}`. Or you can request all phases with an asterix, for example `meterVoltage{*}`. Note that `meterVoltage{*}` is equivalent to `meterVoltage{a|b|c}`. If a phase is specified the above average/sum  aggregation will not be applied and instead you will get back the value for just the specified phase(s).
+
+          Phase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.
+
+          Please note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: The start timestamp of the period of data you wish to retreive
+        schema:
+          type: integer
+      - name: end
+        in: query
+        description: The end timestamp of the period of data you wish to retreive
+        schema:
+          type: integer
+      - name: format
+        in: query
+        description: The format you which to retreive the results, either `powerstation`
+          or `nodes`
+        schema:
+          type: string
+          default: powerstation
+          enum:
+          - powerstation
+          - nodes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            By powerstation:
+              example:
+                data:
+                - meterPower{a}:
+                    1505108933: 0.3857383972607584
+                    1505108937: 0.3806250010513597
+                - meterPower{b}:
+                    1505108944: 0.3849693243306107
+                - meterVoltage:
+                    1505108933: 243.3849693243306
+                    1505108937: 244.3849693243306
+                    1505108941: 245.38573839726075
+                status: OK
+            By nodes:
+              example:
+                data:
+                - meterPower{a}:
+                    d4c58e243e694bba9e57cbdf42970faf:
+                      1505108933: 0.3857383972607584
+                      1505108937: 0.3806250010513597
+                    e720e221204149ec9fa172583bcf4258:
+                      1505108934: 0.3849693243306107
+                      1505108938: 0.3580208346247673
+                - meterPower{b}:
+                    d4c58e243e694bba9e57cbdf42970faf:
+                      1505108933: 0.3857383972607584
+                      1505108937: 0.3806250010513597
+                      1505108941: 0.3806250010513597
+                      1505108943: 0.3806250010513597
+                    e720e221204149ec9fa172583bcf4258:
+                      1505108934: 0.3849693243306107
+                      1505108936: 0.3580208346247673
+                      1505108939: 0.3580208346247673
+                - meterVoltage:
+                    d4c58e243e694bba9e57cbdf42970faf:
+                      1505108937: 244.38573839726075
+                      1505108940: 244.38062500105136
+                    e720e221204149ec9fa172583bcf4258:
+                      1505108937: 245.3849693243306
+                status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/powerstations/{powerstationId}/data/latest:
+    get:
+      tags:
+      - Power Station
+      - Network
+      - Retailer
+      - Data
+      summary: Data - Latest
+      description: Returns the latest value of the metrics for the powerstation or
+        nodes up to a maximum age of data.
+      parameters:
+      - name: powerstationId
+        in: path
+        description: The ID of the power station.
+        required: true
+        schema:
+          type: string
+      - name: metrics
+        in: query
+        description: |
+          This returns the single, most recent (up to a given max age) data point we have for each metric.
+
+          No timestamps are given for this data but you can be sure that no data point will be older than the maxAge query parameter. If you require specific timestamps please consider using the `/data` or `/data/raw` end points.
+
+          The metrics to retreive as a comma separated list of any combination of the following:
+          - meterVoltage - The average voltage (V) across all phases as measured at the meter/grid
+          - meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid
+          - meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid
+          - meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid
+          - solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array
+          - solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array
+          - remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system
+          - batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system
+          - inverterReactivePower - The total (sum) reactive power (var) measured at the inverter
+          - inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter
+          - meterCurrent - The total (sum) current (Amp) measured at the meter/grid
+
+          All real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.
+
+          If ?format=nodes is specified then you may also request the data to be split by phases by adding a phase letter after the metric name, for example `meterVoltage{a}`. These can be combined to request multiple phases, for example `meterVoltage{a|b}`. Or you can request all phases with an asterix, for example `meterVoltage{*}`. Note that `meterVoltage{*}` is equivalent to `meterVoltage{a|b|c}`. If a phase is specified the above average/sum  aggregation will not be applied and instead you will get back the value for just the specified phase(s).
+
+          Phase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.
+
+          Please note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.
+        required: true
+        schema:
+          type: string
+      - name: maxAge
+        in: query
+        description: The maximum age of the data that should be considered "latest"
+          in seconds
+        schema:
+          type: integer
+          default: 30
+      - name: format
+        in: query
+        description: The format you which to retreive the results, either `powerstation`
+          or `nodes`
+        schema:
+          type: string
+          default: powerstation
+          enum:
+          - powerstation
+          - nodes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            By powerstation:
+              example:
+                data:
+                - meterPower{a}: 0.3806250010513597
+                - meterPower{b}: 0.3849693243306107
+                - meterVoltage: 245.38573839726075
+                status: OK
+            By nodes:
+              example:
+                data:
+                - meterPower{a}:
+                    d4c58e243e694bba9e57cbdf42970faf: 0.3857383972607584
+                    e720e221204149ec9fa172583bcf4258: 0.3580208346247673
+                - meterPower{b}:
+                    d4c58e243e694bba9e57cbdf42970faf: 0.3806250010513597
+                    e720e221204149ec9fa172583bcf4258: 0.3580208346247673
+                - meterVoltage:
+                    d4c58e243e694bba9e57cbdf42970faf: 244.38062500105136
+                    e720e221204149ec9fa172583bcf4258: 245.3849693243306
+                status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/data:
+    get:
+      tags:
+      - Network
+      - Retailer
+      - Installer
+      - Data
+      summary: Fleet Data - Downsampled
+      description: Return stored metrics for the entire fleet by downsampling.
+      parameters:
+      - name: metrics
+        in: query
+        description: |
+          This returns downsampled data of metrics for this powerstation.
+
+          Timestamps in the response refer to the start of the period.
+
+          The metrics to retreive as a comma separated list of any combination of the following:
+          - meterVoltage - The average voltage (V) across all phases as measured at the meter/grid
+          - meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid
+          - meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid
+          - meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid
+          - solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array
+          - solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array
+          - remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system
+          - batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system
+          - inverterReactivePower - The total (sum) reactive power (var) measured at the inverter
+          - inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter
+          - meterCurrent - The total (sum) current (Amp) measured at the meter/grid
+
+          All real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.
+
+          Phase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.
+
+          Please note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: The start timestamp of the period of data you wish to retreive
+        schema:
+          type: integer
+      - name: end
+        in: query
+        description: The end timestamp of the period of data you wish to retreive
+        schema:
+          type: integer
+      - name: interval
+        in: query
+        description: The downsampling interval in seconds
+        schema:
+          type: integer
+      - name: fill
+        in: query
+        description: The fill policy to use for empty values. By default any empty
+          values for a deployment (i.e. a missing chuck of data) are ommitted. Specify
+          `fill=null` to return all times with null values if the data is missing.
+          Only `null` is supported.
+        schema:
+          type: string
+          enum:
+          - null
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            data:
+              example:
+              - meterPower:
+                  d4c58e243e694bba9e57cbdf42970faf:
+                    1505109600: 0.3857383972607584
+                    1505111400: 0.3806250010513597
+                  e720e221204149ec9fa172583bcf4258:
+                    1505109600: 0.3849693243306107
+                    1505111400: 0.3580208346247673
+              - meterVoltage:
+                  d4c58e243e694bba9e57cbdf42970faf:
+                    1505109600: 244.38573839726075
+                    1505111400: 244.38062500105136
+                  e720e221204149ec9fa172583bcf4258:
+                    1505109600: 245.3849693243306
+                    1505111400: 245.35802083462477
+            status:
+              example: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/constraints/curtailments:
+    get:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Get curtailment constraints
+      description: Return the constraints of a Virtual Power Plant given a set of
+        query parameters. The parameters correspond to fields to specify when creating
+        a curtailment. This route should be used before executing a curtailment in
+        order to determine the capabilities of that particular Virtual Power Plant.
+      parameters:
+      - name: powerstation
+        in: query
+        description: The ID of the power station being curtailed.
+        schema:
+          type: string
+      - name: duration
+        in: query
+        description: The duration of the curtailment in seconds.
+        schema:
+          type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    realPowerP: 55
+      security:
+      - AccessToken: []
+  /api/curtailments:
+    get:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: All Curtailments
+      description: Returns a list of export curtailments.
+      parameters:
+      - name: filter
+        in: query
+        description: A filter to apply to the returned export curtailments. One of
+          UPCOMING, COMPLETED, INPROGRESS, CANCELLED. Leave empty to view all.
+        schema:
+          type: string
+          enum:
+          - UPCOMING
+          - COMPLETED
+          - INPROGRESS
+      - name: offset
+        in: query
+        description: An integer to offset the results by - to use for paging through
+          the total results.
+        schema:
+          type: number
+          default: 0.0
+      - name: limit
+        in: query
+        description: An integer to limit the results by - to use for paging through
+          the total results.
+        schema:
+          type: number
+          default: 100.0
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                  - component: solar
+                    id: 8380ecf0-e8b9-42c7-8bb5-2e75d13bf484
+                    powerstation: 05bf160741c343ce869d0e9ec7b2ad88
+                    request:
+                      duration: 1800
+                      realPowerP: -1.4
+                      startTime: 1503026870
+                    state: COMPLETED
+                  - component: solar
+                    id: b2588e2c-5675-48aa-a835-9c887b52b16a
+                    request:
+                      duration: 600
+                      realPowerP: -1.4
+                      startTime: 1503452085
+                    state: COMPLETED
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+    post:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Create Curtailment
+      description: Create an export curtailment request.
+      requestBody:
+        description: The curtailment to create.
+        content:
+          application/json:
+            schema:
+              required:
+              - duration
+              - powerstation
+              - realPowerP
+              - startTime
+              type: object
+              properties:
+                component:
+                  type: string
+                  description: The component that is being curtailed.
+                  enum:
+                  - grid
+                  - solar
+                powerstation:
+                  type: string
+                  description: The ID of the power station being curtailed.
+                realPowerP:
+                  type: number
+                  description: The real power limit to which the aggregated components
+                    are being curtailed (kW). This value must always be negative.
+                startTime:
+                  type: number
+                  description: A unix timestamp of the start time of the curtailment.
+                duration:
+                  type: number
+                  description: The duration of the curtailment in seconds.
+              example:
+                component: grid
+                powerstation: cd0412cbc2e444d7a170520ba284091a
+                realPowerP: -1
+                startTime: 1504549112
+                duration: 21600
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  component: grid
+                  powerstation: cd0412cbc2e444d7a170520ba284091a
+                  realPowerP: -1
+                  startTime: 1504549112
+                  duration: 1505549112
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: curtailment
+  /api/curtailments/{curtailmentId}:
+    get:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Get Single Curtailment
+      description: Returns detailed data about the export curtailment with the supplied
+        curtailment ID.
+      parameters:
+      - name: curtailmentId
+        in: path
+        description: The ID of the export curtailment.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    component: grid
+                    createdAt: 1504140351
+                    currentResponse:
+                      deploymentsAccepted: 1
+                    id: aa2df12e-d628-45d6-8a90-2d9b6d6137aa
+                    powerstation: 05bf160741c343ce869d0e9ec7b2ad88
+                    request:
+                      deploymentsRequested: 1
+                      duration: 21600
+                      realPowerP: -1
+                      startTime: 1504549112
+                    nodes:
+                    - d4c58e243e694bba9e57cbdf42970faf
+                    - e720e221204149ec9fa172583bcf4258
+                    state: UPCOMING
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/curtailments/{curtailmentId}/cancel:
+    post:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Cancel Curtailment
+      description: Cancels a scheduled curtailment
+      parameters:
+      - name: curtailmentId
+        in: path
+        description: The ID of the export curtailment.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/curtailments/setpoint:
+    get:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Get Curtailment Setpoint
+      description: Get the current setpoint for default curtailment behaviour.
+      parameters:
+      - name: powerstationId
+        in: query
+        description: The ID of the powerstation to query.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    powerstation: eb014defdded417e8b6a9d7ed078cedf
+                    meterRealPowerP: 0.0
+                    inverterRealPowerP: -24.0
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+        404:
+          description: A curtailment setpoint for the requested powerstation cannot
+            be found. Either the powerstation has not been created or it is has not
+            yet received a valid setpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: No setpoint for powerstation '6442adf69e004405808542b687bcf494'
+                    found.
+                  status: NOT FOUND
+      security:
+      - AccessToken: []
+    post:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Change Curtailment Setpoint
+      description: Change the setpoint for default curtailment behaviour.
+      requestBody:
+        description: The updated curtailment setpoint.
+        content:
+          application/json:
+            schema:
+              required:
+              - inverterRealPowerP
+              - meterRealPowerP
+              - powerstation
+              type: object
+              properties:
+                powerstation:
+                  type: string
+                  description: The ID of the power station being updated.
+                meterRealPowerP:
+                  type: number
+                  description: The real power limit to which the aggregated grid output
+                    is being curtailed by default (kW). A null entry removes any constraint
+                    from the component. Other values must always be negative.
+                inverterRealPowerP:
+                  type: number
+                  description: The real power limit to which the aggregated inverter
+                    output is being curtailed by default (kW). A null entry removes
+                    any constraint from the component. Other values must always be
+                    negative.
+              example:
+                powerstation: cd0412cbc2e444d7a170520ba284091a
+                meterRealPowerP: 0
+                inverterRealPowerP: -1.3
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: setpoint
+  /api/curtailments/heartbeat:
+    post:
+      tags:
+      - Curtailment
+      - Network
+      - Retailer
+      summary: Curtailment Heartbeat
+      description: Send a curtailment heartbeat to a powerstation. Nodes receiving
+        a heartbeat will return to their default curtailment behaviour if the heartbeat
+        is lost.
+      requestBody:
+        description: The updated curtailment setpoint.
+        content:
+          application/json:
+            schema:
+              required:
+              - powerstation
+              type: object
+              properties:
+                powerstation:
+                  type: string
+                  description: The ID of the power station being heartbeated.
+              example:
+                powerstation: cd0412cbc2e444d7a170520ba284091a
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: setpoint
+  /api/dispatches:
+    get:
+      tags:
+      - Dispatch
+      - Network
+      - Retailer
+      summary: All Dispatches
+      description: Return all dispatches/support requests with their basic details.
+      parameters:
+      - name: filter
+        in: query
+        description: A filter to apply to the returned dispatches/support requests.
+          One of UPCOMING, COMPLETED, INPROGRESS or left empty to view all.
+        schema:
+          type: string
+          enum:
+          - UPCOMING
+          - COMPLETED
+          - INPROGRESS
+      - name: offset
+        in: query
+        description: An integer to offset the results by - to use for paging through
+          the total results.
+        schema:
+          type: number
+          default: 0.0
+      - name: limit
+        in: query
+        description: An integer to limit the results by - to use for paging through
+          the total results.
+        schema:
+          type: number
+          default: 100.0
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                  - component: battery
+                    id: bf6e5c09-9e25-4ff0-a2af-d81185e4abc4
+                    powerstation: 05bf160741c343ce869d0e9ec7b2ad88
+                    request:
+                      duration: 3600
+                      powerFactor: 0.7
+                      powerFactorLeadLag: LEADING
+                      realPowerP: 38.2
+                      startTime: 1497336240
+                    state: COMPLETED
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+    post:
+      tags:
+      - Dispatch
+      - Network
+      - Retailer
+      summary: Create Dispatch
+      description: Creates a new dispatch with the specified details
+      requestBody:
+        description: The dispatch to create.
+        content:
+          application/json:
+            schema:
+              required:
+              - duration
+              - powerstation
+              - realPowerP
+              - startTime
+              type: object
+              properties:
+                powerstation:
+                  type: string
+                  description: The id of the powerstation to dispatch
+                startTime:
+                  type: integer
+                  description: The unix timestamp at which this dispatch should start.
+                duration:
+                  type: integer
+                  description: The duration of the request in seconds.
+                realPowerP:
+                  type: number
+                  description: The amount of real power to be dispatched in kW
+                powerFactor:
+                  type: number
+                  description: The requested power factor for this dispatch/support
+                    request. This is only accepted if your account has been enabled
+                    for power factor/voltage control.
+                powerFactorLeadLag:
+                  type: string
+                  description: Used only when power_factor is also present and indicates
+                    if the specified power factor is LEADING or LAGGING. This is only
+                    accepted if your account has been enabled for power factor/voltage
+                    control.
+                  enum:
+                  - LEADING
+                  - LAGGING
+              example:
+                powerstation: 57dfc43d3b9a4c99b05c7794f5d6abb3
+                startTime: 1505214000
+                duration: 28800
+                realPowerP: 2.6
+                powerFactor: 0.7
+                powerFactorLeadLag: LAGGING
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 0c127211-bc31-4d11-8f32-19008c75cf80
+                    status: OK
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: dispatch
+  /api/dispatches/{dispatchId}:
+    get:
+      tags:
+      - Dispatch
+      - Network
+      - Retailer
+      summary: Get Single Dispatch
+      description: Return detailed data about a specific dispatch/support request
+        as specified by the dispatchId in the URL.
+      parameters:
+      - name: dispatchId
+        in: path
+        description: The ID of the dispatch/support request for which to fetch details.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                  - component: battery
+                    createdAt: 1497336240
+                    currentResponse:
+                      deploymentsAccepted: 0
+                      deploymentsResponded: 0
+                      powerFactor: 0.7
+                      powerFactorLeadLag: LEADING
+                      realPowerP: 38.2
+                      rejectedRealPowerP: 0.21
+                    id: bf6e5c09-9e25-4ff0-a2af-d81185e4abc4
+                    powerstation: 05bf160741c343ce869d0e9ec7b2ad88
+                    prediction:
+                      data:
+                      - -5.960000001858923E-8
+                      - -5.960000001858923E-8
+                      - -5.960000001858923E-8
+                      - -5.960000001858923E-8
+                      - -2.97999999121501E-8
+                      - -8.94000000695172E-8
+                      - -1.49000000115862E-7
+                      - -2.98000000231724E-8
+                      - -1.489999998938174E-7
+                      - -2.98000000231724E-8
+                      - -8.93999999584949E-8
+                      - -2.9700000014898364E-8
+                      - -8.940000001400605E-8
+                      deltaSeconds: 1800
+                      startTime: 1505181600
+                    request:
+                      deploymentsRequested: 6
+                      duration: 3600
+                      powerFactor: 0.7
+                      powerFactorLeadLag: LEADING
+                      realPowerP: 38.2
+                      startTime: 1497336240
+                    nodes:
+                    - f7b05c5632334403ac0895959f8d00e7
+                    - 4f0cf230c728478da0822aa7f2d1f9ef
+                    - 56af6a12ae9049298aaa38cde5781145
+                    - 3b904d6c1a8549f3adc0b0dd4a7e9fc6
+                    - 50cafb993f54499cb03396f236dfee6d
+                    - f93c98b6df01472283bc9fbb5d7a6d8d
+                    - 4858794e8ab3410cb523fcf03e4cc573
+                    state: COMPLETED
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+  /api/capabilities:
+    post:
+      tags:
+      - Network
+      - Customer
+      summary: Assign customers to a capability
+      description: Takes a list of customers and assigns them to a capability. Returns
+        a list of changes that have been applied and/or a list or errors.
+      requestBody:
+        description: A list of customers each with a set of capabilities and/or tariff
+          to assign to.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      customers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            nmi:
+                              type: string
+                              description: National Metering Identifier for the customer.
+                            tariff:
+                              type: object
+                              properties:
+                                code:
+                                  type: string
+                                  description: The plan code of the tariff.
+                                startDate:
+                                  type: string
+                                  description: The effective date of the tariff.
+                                discount:
+                                  type: integer
+                                  description: The discount amount for this particular
+                                    tariff.
+                              description: Optional. Specify a change of tariff for
+                                a customer.
+                            capabilities:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    description: Name of the Capability
+                                  startDate:
+                                    type: string
+                                    description: The effective date of the capability
+              example:
+              - customers:
+                - nmi: "11000000001"
+                  capabilities:
+                  - name: Hoodwink Network Support
+                    startDate: 2018-01-01
+                  tariff:
+                  - code: HOODWINK_PLAN
+                    startDate: 2018-01-01
+                    discount: 0.0
+                - nmi: "10000000001"
+                  capabilities:
+                  - name: Jensen Network Support
+                    startDate: 2017-01-01
+        required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                  - errors:
+                    - message: Effective start date must be on or after the starting
+                        date of the capability - 2018-01-01
+                      errorCode: invalid_capability
+                      customers:
+                      - "12345123451"
+                      - "110000012"
+                      - "1000000001"
+                    - message: Customer already assigned to another retailer
+                      customers:
+                      - "12345123451"
+                    - message: Must have a capability code
+                      customers:
+                      - "12345123451"
+                  - warnings:
+                    - message: Customer is not yet commissioned
+                      errorCode: not_commissioned_customer
+                      customers:
+                      - "1100000006"
+                    success:
+                    - "1100000001"
+                    - "1100000002"
+                    - "1100000003"
+                    - "1100000004"
+                    - "1100000005"
+                    - "1100000006"
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+      x-codegen-request-body-name: data
+  /api/users:
+    get:
+      tags:
+      - Users
+      - Management
+      summary: View a list of all users assigned to your marketapi account
+      description: Returns a list of users that are associated with your marketapi
+        account. This response may vary depending on the level of permissions you
+        have. Users with the "fleet.my_reposit.users" permission will be able to see
+        contact details for users. Other users will be able to see names and IDs only.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                - data:
+                  - id: ed97b54ef14a427abe04bb01b25ffe2b
+                    givenName: Jane
+                    surname: Bloggs
+                    email: janeb@email.com
+                  - id: fb0312c86cd04c1385f46044fee09e8d
+                    givenName: Joe
+                    surname: Bloggs
+                    email: j.bloggs@email.com
+        401:
+          description: Invalid access token. If the error code in the returned JSON
+            is `expired_token`, it means you need to request a new access token through
+            the `/auth/login/` route using your username and password.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: expired_token
+                  message: The token you provided has expired.
+                  status: error
+      security:
+      - AccessToken: []
+components:
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      description: |
+        To authenticate you need to generate an API Key using Reposit Fleet. API Keys can be limited
+        to whitelisted origin IP addresses for security and do not expire making them more suitable to
+        server-to-server comms. API keys may also be revoked via Reposit Fleet.
+
+        ### Creating an API Key
+
+        API keys for the Reposit Market API can be generated by first logging in to
+        [Reposit Fleet](https://fleet.repositpower.com). Once you have logged in click your username
+        at the top right and then select "[User Settings](https://fleet.repositpower.com/user/settings)"
+
+        Within the section labelled "API Keys" click the "Add API Key" button.
+
+        Within the dialog that appears you will be able to name the key you are generating and specify
+        a whitelist of IP addresses that this token is valid for. You will also need to confirm your
+        password.
+        When you have configured your keys settings click "Add" and your newly created key will be
+        displayed - the key itself is not stored by Reposit and therefore this is your only
+        opportunity to save the key securely.
+
+        **Note**: The generated key authenticates as the account that you are currently logged in to
+        Reposit Fleet for and as such will carry the same permissions. If you require a locked down
+        account it is recommend that you create a new account for Reposit Fleet and generate the
+        API Key for this account.
+
+
+        ### Using an API Key
+
+        Simply add `Bearer ` followed by the API key in the `Authorization` header of any request
+        to Market API.
+
+        e.g.:
+
+        `Authorization: Bearer A2YWQiLCJpc3...`
+
+        ### Revoking an API Key
+
+        If an API Key becomes lost or is no longer required then the API Key can be revoked.
+
+        Login to Reposit Fleet as the user for which you wish to revoke the API Key and proceed
+        to [User Settings](https://fleet.repositpower.com/user/settings).
+
+        From within the "API Keys" you will be able to see a table of all issued API Keys, find the
+        API Key you wish to revoke and select the "Remove" link in the table.
+
+        Once an API Key is removed it will cease to work immediately and can not be recovered or reinstated.
+      name: Bearer
+      in: header

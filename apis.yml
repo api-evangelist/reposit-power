@@ -1,0 +1,175 @@
+aid: reposit-power
+url: https://raw.githubusercontent.com/api-evangelist/reposit-power/refs/heads/main/apis.yml
+name: Reposit Power
+kind: company
+description: >-
+  Reposit Power is an Australian home-energy technology company founded in 2012
+  and headquartered in Canberra, ACT, that builds the Reposit Controller — a
+  local control device and cloud platform that sits on top of a household's
+  solar, battery and meter and trades that stored energy into the National
+  Electricity Market on the owner's behalf, paying the household back as
+  GridCredits and underwriting the result with its No Bill guarantee. It is not
+  a retailer, a distributor or a meter provider; it sits one layer above them in
+  the Australian energy value chain as a distributed-energy-resource aggregator
+  and virtual power plant operator, selling through a national network of solar
+  installers and partnering with retailers and network businesses who dispatch
+  and curtail its fleet. Its API posture is the opposite of the retailer pattern
+  and needs stating plainly. Reposit is NOT a designated Consumer Data Right
+  energy data holder — it does not appear among the 84 energy data-holder brands
+  on the ACCC CDR Register, and it is not an accredited data recipient — so the
+  Australian statutory energy mandate simply does not reach it, and the company
+  publishes no CDR page at all. What it does publish, entirely voluntarily and
+  with no obligation compelling it, is two real, downloadable, anonymously
+  readable OpenAPI contracts behind two live Swagger UI pages: a Customer API
+  covering a household's own solar, inverter, battery state-of-charge, house
+  consumption, grid-meter power and earned GridCredits, and a much larger Market
+  API used by Reposit Fleet that lets network and retailer organisations
+  enumerate nodes, build power stations, pull fleet telemetry and issue export
+  curtailments and dispatches against real homes. Every operational endpoint on
+  both APIs returned 401 anonymously — the contracts are open, the data is not.
+  There is no open market or grid data feed of any kind, no Green Button, no
+  Consumer Data Standards conformance and no reference to IEEE 2030.5, CSIP-AUS,
+  OpenADR or IEC CIM anywhere in either specification; the shape is proprietary,
+  with the Australian National Meter Identifier as its only sector identifier.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/reposit-power.png
+tags:
+- Energy
+- Australia
+- Utilities
+- Electricity
+- Batteries
+- DER
+- Virtual Power Plant
+- Demand Response
+- Solar
+- Grid
+- Energy Markets
+- Smart Metering
+- Storage
+- Flexibility
+created: '2026-07-27'
+modified: '2026-07-27'
+specificationVersion: '0.19'
+apis:
+- aid: reposit-power:reposit-power-customer-api
+  name: Reposit Customer API
+  description: >-
+    Reposit's own documented REST API for the owner of a Reposit-controlled home
+    energy system, described by a verbatim OpenAPI 3.0.3 contract that the
+    company serves anonymously at https://api.repositpower.com/spec/ (filename
+    openapi.yaml, last-modified 2024-11-28) and renders in Swagger UI at
+    https://api.repositpower.com/docs/. Eleven operations across two declared
+    tags. Two of them log in and refresh; one lists the userkeys — the battery
+    system identifiers — attached to the calling account; the remaining eight
+    read one deployment's hardware components, battery capacity, historical
+    solar generation, battery-inverter real power, house consumption, battery
+    state of charge in kWh, real power at the grid connection, and GridCredits
+    earned in dollars. The spec's own info block calls it "an informal
+    description of external Reposit API provided to Reposit customers" and
+    points feedback at api@repositpower.com. Authentication is a bearer JWT
+    (components.securitySchemes.bearerAuth, type http / scheme bearer /
+    bearerFormat JWT) obtained by POSTing Reposit account credentials to
+    /v2/auth/login/ with a Reposit-Auth header of either Stateless or API; the
+    API variant additionally returns a refresh_token for /v2/auth/refresh/.
+    Access is therefore customer-account-required: a developer who is not a
+    Reposit customer has no way to obtain a token. Confirmed on 2026-07-27 that
+    POST /v2/auth/login/ with junk credentials returns HTTP 401
+    {"error":"unauthorized"} and GET /v2/userkeys/ returns HTTP 401 anonymously.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Energy
+  - Australia
+  - Batteries
+  - Solar
+  - Smart Metering
+  - Consumer Data
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-customer-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+- aid: reposit-power:reposit-power-market-api
+  name: Reposit Power Market API
+  description: >-
+    The larger of Reposit's two published contracts, and the one that actually
+    controls hardware. A verbatim OpenAPI 3.0.1 document served anonymously at
+    https://marketapi.repositpower.com/docs/spec/ (filename
+    public-fleet-api.yaml, last-modified 2025-06-24) and rendered in Swagger UI
+    at https://marketapi.repositpower.com/docs/ under the title "Reposit Power
+    Fleet API". The spec describes itself as the API "used by
+    fleet.repositpower.com and related services". Twenty-eight operations across
+    twenty-two paths, tagged by the audience allowed to call them — Network,
+    Retailer, Installer, Customer — and by subject: Node (list deployments and
+    read their address, network NMI, operational status, name plate and events),
+    Power Station (full CRUD over aggregations of nodes, plus downsampled, raw
+    and latest telemetry), Data (fleet-wide downsampled metrics), Curtailment
+    (read constraints, create, list, cancel, get and change an export setpoint,
+    and post a heartbeat), Dispatch (create, list and get export dispatches),
+    Capabilities (assign customers to a capability) and Users. This is the
+    virtual-power-plant control plane: a network or retailer partner can curtail
+    or dispatch the exports of real Australian households through it.
+    Authentication is a bearer API key (components.securitySchemes.AccessToken,
+    type apiKey, in header, name Bearer) that cannot be self-served — the spec's
+    own description states the key is generated inside the logged-in Reposit
+    Fleet web app at https://fleet.repositpower.com/user/settings, inherits that
+    account's permissions, never expires, may be pinned to whitelisted origin IP
+    addresses, and is revocable from the same screen. Fleet accounts are issued
+    to partner organisations, so the real gate is a commercial relationship with
+    Reposit. Confirmed on 2026-07-27 that GET /api/nodes, /api/powerstations,
+    /api/data, /api/curtailments, /api/dispatches and /api/users all return HTTP
+    401 {"error":"unauthorized"} anonymously.
+  humanURL: https://marketapi.repositpower.com/docs/
+  baseURL: https://marketapi.repositpower.com/
+  tags:
+  - Energy
+  - Australia
+  - DER
+  - Virtual Power Plant
+  - Demand Response
+  - Grid
+  - Curtailment
+  - Dispatch
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-market-api-openapi.yml
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+  - type: Contact
+    url: mailto:api@repositpower.com
+common:
+- type: Website
+  url: https://repositpower.com/
+- type: About
+  url: https://repositpower.com/about-us
+- type: Pricing
+  url: https://repositpower.com/pricing
+- type: FAQ
+  url: https://repositpower.com/faqs
+- type: Support
+  url: https://help.repositpower.com/knowledge
+- type: TermsOfService
+  url: https://repositpower.com/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://repositpower.com/privacy-policy
+- type: Portal
+  url: https://fleet.repositpower.com
+- type: APIReference
+  url: https://api.repositpower.com/docs/
+- type: Documentation
+  url: https://marketapi.repositpower.com/docs/
+- type: GitHub
+  url: https://github.com/RepositPower
+- type: ContactEmail
+  url: mailto:api@repositpower.com
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,584 @@
+aid: reposit-power
+name: Reposit Power
+review:
+  question: >-
+    Australia extended the Consumer Data Right — the same statute, the same
+    regulator (ACCC) and the same Data Standards Body that forced fifty banks to
+    publish one byte-for-byte identical contract — from banking into energy. Does
+    that transplanted mandate reach a distributed-energy aggregator like Reposit
+    Power, and if not, what does the company publish anyway?
+  answer: >-
+    No, and quite a lot. The CDR energy designation lands on retailers, on
+    distributors and on AEMO as gateway; it does not land on the DER aggregator
+    sitting above them. Reposit is absent from the ACCC CDR Register's energy
+    data-holder list and absent from the accredited-data-recipient list, and
+    publishes no CDR page anywhere on its site. Yet with nothing compelling it,
+    Reposit serves two real, complete, anonymously downloadable OpenAPI
+    contracts — a Customer API and a Market API — behind two live Swagger UI
+    pages. Both were harvested verbatim. Every operational endpoint on both
+    returned 401 anonymously.
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  homeMarket: Australia
+  tier: storage-flexibility
+  summary: >-
+    Reposit Power is the control case's control case. In the one sector where a
+    proven statutory data mandate was deliberately transplanted, this company
+    demonstrates the mandate's boundary: it operates entirely inside Australian
+    energy, it holds half-hourly household metering, solar, battery and grid data
+    for thousands of homes, and it can curtail and dispatch those homes' exports
+    — and none of the Consumer Data Right applies to it, because the designation
+    follows the retail relationship, not the data. What Reposit publishes it
+    publishes voluntarily, and what it publishes is more machine-readable than
+    most designated data holders manage: two OpenAPI documents totalling 39
+    operations, served with content-disposition filenames and Last-Modified
+    headers, no login required to read them.
+
+mandate:
+  regime: none
+  regimeVerbatim: >-
+    No obligation was found that applies to Reposit Power. The relevant regime in
+    its home market is the Consumer Data Right (Competition and Consumer Act 2010
+    Part IVD), extended by designation from banking into the energy sector,
+    regulated by the ACCC with technical standards set by the Data Standards Body
+    as the Consumer Data Standards, and with AEMO acting as the designated
+    gateway for standardised retailer-held metering and service-point data. That
+    designation attaches to energy retailers, to distribution network service
+    providers and to AEMO. Reposit Power is none of those. It is a
+    distributed-energy-resource aggregator and virtual power plant operator that
+    sells a controller and a savings guarantee to households and sells fleet
+    flexibility to the retailers and networks that ARE designated. The mandate
+    therefore stops one layer below it.
+  status: not-applicable
+  statusReasoning: >-
+    Recorded as not-applicable rather than none, and emphatically not as
+    designated-not-live, because the distinction is the finding. Reposit is not
+    a designated entity that has failed to build; it is an entity the
+    designation was never drawn to include. Three checks establish this, all run
+    anonymously on 2026-07-27 and all recorded under `evidence` below. (1) The
+    public ACCC CDR Register energy data-holder brand summary returned HTTP 200
+    with 84 energy brands and zero matches for the string "reposit" anywhere in
+    the payload — the same register call that returns a working publicBaseUri for
+    Amber, AGL, Origin and EnergyAustralia returns nothing for Reposit. (2) The
+    CDR Register's all-data-recipients endpoint returned HTTP 200 on x-v: 3 with
+    no match for "reposit", so Reposit is not an accredited data recipient
+    either, meaning it cannot be a consumer of the mandated energy data any more
+    than it is a producer of it. (3) Reposit's own site publishes no CDR surface
+    at all: /cdr, /consumer-data-right and /data-sharing each returned 404, and
+    the sitemap contains a single URL. No claim by the company was relied on for
+    any part of this, because the company makes no claim.
+  registerEvidence:
+    - source: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+      method: GET
+      headers: 'x-v: 1'
+      httpStatus: 200
+      fetched: '2026-07-27'
+      brandsReturned: 84
+      repositMatches: 0
+      note: >-
+        Same endpoint, same fetch date, that lists Amber, AGL, Origin Energy,
+        EnergyAustralia, Alinta, Shell Energy, Red Energy and Powershop as energy
+        data holders with populated public base URIs. Reposit Power appears
+        nowhere in the response.
+    - source: https://api.cdr.gov.au/cdr-register/v1/all/data-recipients
+      method: GET
+      headers: 'x-v: 3'
+      httpStatus: 200
+      fetched: '2026-07-27'
+      repositMatches: 0
+      note: >-
+        x-v: 1 and x-v: 2 both returned HTTP 406 on this endpoint; x-v: 3
+        returned 200 with a 173KB payload. No accredited data recipient named
+        Reposit.
+  siteEvidence:
+    - probe: https://repositpower.com/cdr
+      httpStatus: 404
+    - probe: https://repositpower.com/consumer-data-right
+      httpStatus: 404
+    - probe: https://repositpower.com/data-sharing
+      httpStatus: 404
+    - probe: https://repositpower.com/integrations
+      httpStatus: 404
+    - probe: https://repositpower.com/sitemap.xml
+      httpStatus: 200
+      note: >-
+        Returned a 94KB XML document containing exactly one <loc> entry
+        (/data-centre-grid-services). No CDR, developer or data-sharing URL is
+        advertised.
+  interpretation: >-
+    A mandate is not an implementation, and this profile records the inverse
+    lesson just as sharply: an implementation is not a mandate. Reposit holds
+    exactly the class of consumer energy data the Consumer Data Right was written
+    to liberate — interval house consumption, solar generation, battery state of
+    charge, grid-connection real power, all keyed to a National Meter Identifier —
+    and it publishes documented APIs over that data. None of it is compelled.
+    Had Reposit published nothing, no regulator would have noticed. The Australian
+    energy CDR transplant therefore replicates the banking mandate's machinery
+    faithfully at the retail layer while leaving the fastest-moving layer of the
+    sector, the DER aggregators and VPP operators, entirely outside its perimeter.
+
+dataStandard:
+  primary: no standard reference found
+  detail: >-
+    Both harvested specifications were grepped on 2026-07-27 for every plausible
+    sector standard. There is no reference to Green Button or ESPI, no reference
+    to the Consumer Data Standards or /cds-au, no reference to IEEE 2030.5,
+    CSIP-AUS or SEP2, no reference to OpenADR, no reference to OCPP or OCPI, and
+    no reference to IEC CIM 61968/61970. The only sector vocabulary present is
+    the Australian National Meter Identifier: the Market API's
+    GET /api/nodes/{nodeId}/network returns an `nmi` field, and the term appears
+    six times across the document. Both contracts are proprietary REST shapes.
+  formats:
+    - OpenAPI 3.0.3 (Reposit Customer API, version 2023.5.1)
+    - OpenAPI 3.0.1 (Reposit Power Market API, version 1.0.0)
+  note: >-
+    Publishing an OpenAPI document is a description standard, not a data
+    standard. Reposit describes its own proprietary model well; it does not
+    implement anyone else's model.
+
+consumerVsMarketSplit:
+  consumerDataApi: true
+  consumerDataDetail: >-
+    Yes, but through the account holder, not through a consent framework. The
+    Reposit Customer API exposes an individual household's own data —
+    /v2/deployments/{userkey}/house/historical (consumption in kW),
+    /generation/historical/p (solar generation as negative real power),
+    /inverter/historical/p, /battery/historical/soc (state of charge in kWh),
+    /battery/capacity, /meter/historical/p (real power at the grid connection)
+    and /gridcredits/historical (earnings in dollars) — over a documented,
+    versioned, publicly specified contract. A third party can reach that data
+    only by holding the customer's own Reposit username and password and calling
+    /v2/auth/login/ on their behalf. There is no OAuth authorisation code flow,
+    no scope model, no consent dashboard and no accreditation: the delegation
+    mechanism is credential sharing. That is materially weaker than the CDR
+    consent model the same country mandates for retailers, and it is the price
+    of falling outside the designation.
+  marketDataOpen: false
+  marketDataDetail: >-
+    No. Reposit publishes no open grid, market or system data of any kind. There
+    is no anonymous feed anywhere in either contract — unlike Amber Electric,
+    whose spec carries an explicit `security: []` override on a public renewables
+    endpoint, neither Reposit document declares a single unauthenticated
+    operation. Verified on 2026-07-27: GET /api/nodes, GET /api/powerstations,
+    GET /api/data, GET /api/curtailments, GET /api/dispatches and GET /api/users
+    on marketapi.repositpower.com all returned HTTP 401 with body
+    {"error":"unauthorized","message":"Unauthorized.","status":"error"}, and
+    GET /v2/userkeys/ on api.repositpower.com returned the identical 401.
+    Reposit's fleet telemetry is genuinely National Electricity Market-relevant
+    aggregate data, and none of it is public.
+  theSplit: >-
+    The split here is not open-versus-closed data, it is open-versus-closed
+    CONTRACT. Both API surfaces are fully documented and both are completely shut
+    to an anonymous caller. What Reposit gives away for free is the machine-readable
+    description of its platform; what it never gives away is a single row.
+
+accessGate:
+  gate: customer-account-required
+  gateDetail: >-
+    Recorded as customer-account-required because that is the gate on the API a
+    developer would actually be pointed at, but the honest answer is that Reposit
+    runs two different gates on two different APIs and neither is self-serve.
+  perApi:
+    - api: Reposit Customer API
+      gate: customer-account-required
+      whatADeveloperMustDo: >-
+        Be, or hold the credentials of, an existing Reposit customer with an
+        installed Reposit Controller. POST those credentials to
+        https://api.repositpower.com/v2/auth/login/ with a Reposit-Auth header
+        set to Stateless or API, receive a JWT access_token (plus a refresh_token
+        under API auth), and send it as Authorization: Bearer <token>. There is
+        no signup page, no free tier, no sandbox and no key-issuing console. A
+        developer who does not own Reposit hardware cannot obtain a token by any
+        published route.
+      verified: >-
+        POST /v2/auth/login/ with fabricated credentials returned HTTP 401 on
+        2026-07-27; GET /v2/userkeys/ returned HTTP 401 anonymously.
+    - api: Reposit Power Market API
+      gate: partner-only
+      whatADeveloperMustDo: >-
+        Hold a Reposit Fleet account. The spec's own securityScheme description
+        instructs the caller to log in to https://fleet.repositpower.com, open
+        User Settings at https://fleet.repositpower.com/user/settings, use the
+        "API Keys" section to "Add API Key", optionally whitelist origin IP
+        addresses, confirm the account password, and copy the key once because
+        Reposit does not store it. Fleet accounts are issued to network,
+        retailer and installer organisations — the API's own tags are Network,
+        Retailer, Installer and Customer — so the real prerequisite is a
+        commercial relationship with Reposit. The Fleet login page is live
+        (HTTP 200, Cloudflare Turnstile on the form) but offers no self-service
+        registration. The versioning policy the spec links states support is
+        "provided as per the terms of the contract", which confirms the
+        contractual gate in Reposit's own words.
+      verified: >-
+        All six probed /api/* endpoints returned HTTP 401 anonymously on
+        2026-07-27.
+  whatIsUngated: >-
+    The documentation and the contracts themselves. https://api.repositpower.com/docs/
+    and https://marketapi.repositpower.com/docs/ both return HTTP 200 to an
+    anonymous browser and render Swagger UI, and both specs download anonymously
+    from https://api.repositpower.com/spec/ and
+    https://marketapi.repositpower.com/docs/spec/ respectively. No login, no
+    click-through, no licence agreement. That is a real and uncommon act of
+    openness for a company under zero obligation to perform it.
+
+authModel:
+  customerApi:
+    scheme: HTTP bearer, JWT
+    declaredAs: 'components.securitySchemes.bearerAuth — type: http, scheme: bearer, bearerFormat: JWT'
+    tokenAcquisition: >-
+      POST /v2/auth/login/ with a JSON body of Reposit account credentials and a
+      Reposit-Auth request header. Two modes are documented in the spec's own
+      info.description: "Stateless authentication" issues a short-lived
+      access_token with a stated expiry and requires full re-login afterwards;
+      "API authentication" additionally issues a refresh_token redeemable at
+      POST /v2/auth/refresh/.
+    scopes: >-
+      None. No scope, permission or consent model appears anywhere in the
+      contract. A token is all-or-nothing over the deployments attached to the
+      account.
+  marketApi:
+    scheme: API key presented as a bearer token
+    declaredAs: 'components.securitySchemes.AccessToken — type: apiKey, in: header, name: Bearer'
+    tokenAcquisition: >-
+      Generated by hand inside the Reposit Fleet web application at
+      /user/settings. Keys do not expire, may be restricted to a whitelist of
+      origin IP addresses as a second factor, inherit the permissions of the
+      Fleet user that created them, and are revocable from the same screen. The
+      spec explicitly recommends creating a dedicated low-privilege Fleet account
+      when a restricted key is needed, which is an admission that the key model
+      has no scopes of its own.
+    scopes: >-
+      None declared. Authorisation is expressed as audience tags on operations
+      (Network, Retailer, Installer, Customer, Management) rather than as OAuth
+      scopes, and is enforced by the permissions of the underlying Fleet account.
+  openidConnect:
+    probed: https://repositpower.com/.well-known/openid-configuration
+    httpStatus: 404
+    alsoProbed: https://api.repositpower.com/.well-known/openid-configuration
+    alsoProbedStatus: 404
+    note: >-
+      No OpenID Connect discovery document is served on any Reposit host. There
+      is no OAuth2 authorisation server, no mTLS, and none of the CDR
+      private_key_jwt machinery — consistent with the company being outside the
+      Consumer Data Right entirely.
+
+developerSurface:
+  portal: https://api.repositpower.com/docs/
+  portalConfirmed: true
+  portalCaveat: >-
+    Confirmed live at HTTP 200 anonymously, rendering Swagger UI 3.x, titled
+    "Reposit Customer API - Docs". It is a genuine public API reference and NOT a
+    customer login screen. It is not, however, a self-serve onboarding portal:
+    nothing on it issues credentials. A second equivalent page exists for the
+    Market API at https://marketapi.repositpower.com/docs/ (Swagger UI 4.5.0,
+    titled "Reposit Power Fleet API"). Neither is linked from repositpower.com.
+  probes:
+    - url: https://repositpower.com
+      httpStatus: 200
+    - url: https://www.repositpower.com
+      httpStatus: 200
+      note: redirects to https://repositpower.com/
+    - url: https://developer.repositpower.com
+      httpStatus: 000
+      note: DNS does not resolve
+    - url: https://developers.repositpower.com
+      httpStatus: 000
+      note: DNS does not resolve
+    - url: https://docs.repositpower.com
+      httpStatus: 000
+      note: DNS does not resolve
+    - url: https://data.repositpower.com
+      httpStatus: 000
+      note: DNS does not resolve
+    - url: https://api.repositpower.com/
+      httpStatus: 200
+      note: Returns a bare unix timestamp as the body (18 bytes). A liveness probe, not a landing page.
+    - url: https://api.repositpower.com/docs/
+      httpStatus: 200
+      note: Swagger UI, loads its spec from /spec/
+    - url: https://api.repositpower.com/spec/
+      httpStatus: 200
+      note: >-
+        content-type application/octet-stream, content-disposition inline;
+        filename=openapi.yaml, content-length 13459, last-modified
+        Thu, 28 Nov 2024 04:19:24 GMT. Parsed as OpenAPI 3.0.3.
+    - url: https://marketapi.repositpower.com/
+      httpStatus: 200
+      note: Bare unix timestamp body, same liveness pattern as api.repositpower.com
+    - url: https://marketapi.repositpower.com/docs/
+      httpStatus: 200
+      note: Swagger UI 4.5.0, loads its spec from /docs/spec/
+    - url: https://marketapi.repositpower.com/docs/spec/
+      httpStatus: 200
+      note: >-
+        content-type application/octet-stream, content-disposition inline;
+        filename=public-fleet-api.yaml, content-length 82618, last-modified
+        Tue, 24 Jun 2025 07:47:58 GMT. Parsed as OpenAPI 3.0.1.
+    - url: https://fleet.repositpower.com/
+      httpStatus: 200
+      note: >-
+        Reposit Fleet — the partner web application. React SPA behind a
+        Cloudflare Turnstile challenge. Login only; no registration offered.
+    - url: https://repositpower.com/developers
+      httpStatus: 404
+    - url: https://repositpower.com/developer
+      httpStatus: 404
+    - url: https://repositpower.com/api
+      httpStatus: 404
+    - url: https://repositpower.com/docs
+      httpStatus: 404
+    - url: https://repositpower.com/data
+      httpStatus: 404
+    - url: https://repositpower.com/openapi.json
+      httpStatus: 404
+    - url: https://repositpower.com/swagger.json
+      httpStatus: 404
+    - url: https://repositpower.com/api-docs
+      httpStatus: 404
+    - url: https://api.repositpower.com/openapi.json
+      httpStatus: 404
+    - url: https://api.repositpower.com/swagger.json
+      httpStatus: 404
+    - url: https://api.repositpower.com/robots.txt
+      httpStatus: 404
+    - url: https://marketapi.repositpower.com/openapi.json
+      httpStatus: 404
+    - url: https://marketapi.repositpower.com/spec/
+      httpStatus: 404
+      note: The Market API spec lives at /docs/spec/, not /spec/ — the two hosts differ.
+    - url: https://help.repositpower.com/
+      httpStatus: 404
+    - url: https://help.repositpower.com/knowledge
+      httpStatus: 200
+    - url: https://api.repositpower.com.au/
+      httpStatus: 000
+      note: DNS does not resolve. The .com.au variant cited in third-party forum posts is dead.
+  discoveryNote: >-
+    Neither documentation page is discoverable from repositpower.com. The
+    marketing site's sitemap has one entry, robots.txt is a HubSpot default, and
+    /developers, /developer, /api and /docs are all 404. Both Swagger pages were
+    found via search-engine indexing and by following the Swagger UI bootstrap
+    URL out of each page's own inline script. This is publishing without
+    promoting: the contracts are open but nothing on the company's own site tells
+    a developer they exist.
+
+apisCaptured:
+  - name: Reposit Customer API
+    spec: openapi/reposit-power-customer-api-openapi.yml
+    specVersion: OpenAPI 3.0.3
+    apiVersion: 2023.5.1
+    server: https://api.repositpower.com/
+    paths: 11
+    operations: 11
+    tags: [auth, deployment, battery, solar, inverter]
+    source: https://api.repositpower.com/spec/
+    httpStatus: 200
+    fetched: '2026-07-27'
+    parsed: true
+    operationList:
+      - POST /v2/auth/login/
+      - POST /v2/auth/refresh/
+      - GET /v2/userkeys/
+      - GET /v2/deployments/{userkey}/components
+      - GET /v2/deployments/{userkey}/battery/capacity
+      - GET /v2/deployments/{userkey}/generation/historical/p
+      - GET /v2/deployments/{userkey}/inverter/historical/p
+      - GET /v2/deployments/{userkey}/house/historical
+      - GET /v2/deployments/{userkey}/battery/historical/soc
+      - GET /v2/deployments/{userkey}/meter/historical/p
+      - GET /v2/deployments/{userkey}/gridcredits/historical
+  - name: Reposit Power Market API
+    spec: openapi/reposit-power-market-api-openapi.yml
+    specVersion: OpenAPI 3.0.1
+    apiVersion: '1.0.0'
+    server: https://marketapi.repositpower.com/
+    paths: 22
+    operations: 28
+    tags: [Node, Power Station, Data, Curtailment, Dispatch, Network, Retailer, Installer, Customer, Management, Users]
+    source: https://marketapi.repositpower.com/docs/spec/
+    httpStatus: 200
+    fetched: '2026-07-27'
+    parsed: true
+    operationList:
+      - GET /api/nodes
+      - GET /api/nodes/{nodeId}/address
+      - GET /api/nodes/{nodeId}/network
+      - GET /api/nodes/{nodeId}/status
+      - GET /api/nodes/{nodeId}/namePlate
+      - GET /api/nodes/{nodeId}/events
+      - GET /api/powerstations
+      - POST /api/powerstations
+      - GET /api/powerstations/{powerstationId}
+      - PUT /api/powerstations/{powerstationId}
+      - DELETE /api/powerstations/{powerstationId}
+      - GET /api/powerstations/{powerstationId}/data
+      - GET /api/powerstations/{powerstationId}/data/raw
+      - GET /api/powerstations/{powerstationId}/data/latest
+      - GET /api/data
+      - GET /api/constraints/curtailments
+      - GET /api/curtailments
+      - POST /api/curtailments
+      - GET /api/curtailments/{curtailmentId}
+      - POST /api/curtailments/{curtailmentId}/cancel
+      - GET /api/curtailments/setpoint
+      - POST /api/curtailments/setpoint
+      - POST /api/curtailments/heartbeat
+      - GET /api/dispatches
+      - POST /api/dispatches
+      - GET /api/dispatches/{dispatchId}
+      - POST /api/capabilities
+      - GET /api/users
+
+productApiFamily:
+  segmentationAsDocumented: >-
+    Reposit's own documents segment by two axes at once, which is unusual and
+    worth recording faithfully. The Customer API segments by SUBJECT — auth,
+    deployment, battery, solar, inverter — and the Market API segments by
+    SUBJECT and simultaneously by AUDIENCE, declaring Network, Retailer and
+    Installer as first-class tags applied alongside Node, Power Station, Data,
+    Curtailment and Dispatch. An operation is therefore labelled both with what
+    it does and with which class of organisation may call it.
+  usageAndMetering: >-
+    Present, household-scope only. House consumption, solar generation,
+    battery-inverter real power, battery state of charge and grid-connection real
+    power, all as time series with start/end/deltaT parameters. Fleet-scope
+    equivalents exist on the Market API as downsampled, raw and latest telemetry.
+  tariffsAndPricing: >-
+    Absent as a product API. No plan, tariff or price endpoint exists on either
+    contract. Reposit's commercial model is a savings guarantee, not a tariff
+    catalogue, and the wholesale price signal it trades against is AEMO's, not
+    its own to publish.
+  billing: >-
+    Represented only as GridCredits: /v2/deployments/{userkey}/gridcredits/historical
+    returns earned credits in dollars. There is no invoice, statement or payment
+    endpoint. The Customer API's schema list includes a CostHistorical schema
+    that no path in the harvested document references.
+  outages: >-
+    No outage API. Node operational status and node events are the nearest
+    equivalent and are partner-scope, on the Market API.
+  derAndAssetControl: >-
+    This is the centre of gravity of the Market API and the most consequential
+    surface Reposit publishes. Export curtailment (constraints, create, list,
+    cancel, get and change setpoint, heartbeat) and export dispatch (create,
+    list, get) are write operations that act on real household hardware. Power
+    Station CRUD lets a partner define and redefine the aggregations those
+    commands target. The heartbeat endpoint implies a dead-man's-switch pattern
+    on curtailment, which is a genuine grid-safety design choice made visible by
+    the contract.
+  chargingSessions: >-
+    None. No EV charging surface, no OCPP, no OCPI.
+  emissionsAndCarbon: >-
+    None. No carbon intensity or emissions endpoint on either API.
+  marketData: >-
+    None published openly. Reposit participates in the National Electricity
+    Market and in AEMO virtual power plant work, but exposes no market feed.
+
+thirdPartyArtifacts:
+  - artifact: https://github.com/RepositPower
+    httpStatus: 200
+    note: >-
+      Reposit Power's GitHub organisation holds 23 repositories, of which 22 are
+      forks of unrelated open-source infrastructure (OpenTSDB, repmgr, pyzmq,
+      pfSense, Flask middleware). The single first-party repository is
+      RepositPower/reposit-python-client, "A library to communicate with a
+      Reposit Controller", Apache-2.0, 1 star, last pushed 2021-03-29. Its
+      README.rst returns 404 on the master branch. It is not a client for either
+      published HTTP API and is not treated as a maintained SDK here.
+  - artifact: https://gist.github.com/6005505dd315594ce5c39eed98bcd82f
+    httpStatus: 200
+    note: >-
+      "Reposit Market API - API Keys", a public gist created 2018-01-31 by GitHub
+      user `switchtrue`, not by the RepositPower organisation. Its text is
+      near-identical to the AccessToken description embedded in the official
+      Market API spec, so it is treated as a mirror rather than as independent
+      evidence. Recorded because search engines surface it above Reposit's own
+      documentation.
+  - artifact: https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31
+    httpStatus: 404 via browser fetch, 200 via GitHub Gist API
+    note: >-
+      The Market API specification's info.description instructs callers to
+      "review our versioning and support policy before using the API" and links
+      to this gist. The link is broken for an ordinary reader: the gist is
+      secret (public=false) and owned by `switchtrue`, not `mleonard87` as the
+      URL implies, and not by the RepositPower organisation. Retrieved via the
+      Gist API it proves to be "Reposit Market API Versioning Policy [DRAFT]",
+      created 2017-09-18 and last updated 2017-10-03, still marked DRAFT nine
+      years later. It defines a two-tier stability model — endpoints under /api
+      are production with a 12-month deprecation window, endpoints without the
+      /api prefix are prototype with no notice, no documentation and no support —
+      and states that support is "provided as per the terms of the contract".
+      Recorded as a governance finding: the only versioning commitment the API
+      makes points at a nine-year-old draft that its intended audience cannot
+      open.
+
+companyContext:
+  founded: 2012
+  headquarters: Canberra, ACT, Australia
+  homeMarket: Australia
+  ceo: Dean Spaccavento (CEO and co-founder)
+  positionInValueChain: >-
+    Neither retailer nor network. Reposit sells a controller and a cloud platform
+    through a national network of accredited solar installers, aggregates the
+    resulting fleet of household batteries into a virtual power plant, and sells
+    that flexibility to the retailers and network businesses who are the
+    designated parties under the Consumer Data Right. Its consumer proposition is
+    No Bill, a contractual guarantee of zero electricity bills for seven years or
+    more, funded by GridCredits earned when the fleet supports the grid.
+  scale: >-
+    The company's own homepage states it serves more than 6,000 Australian homes
+    and has operated for over a decade. Not independently verified.
+  publicProgrammeHistory: >-
+    Reposit received ARENA funding for an early Canberra virtual-power-plant
+    trial aggregating roughly 250 rooftop systems to about 1MW, and
+    Reposit-controlled batteries have appeared in retailer demand-response
+    programmes. Recorded as background from secondary reporting, not as an API
+    finding.
+
+sources:
+  - url: https://api.repositpower.com/docs/
+    type: APIReference
+    httpStatus: 200
+    note: Swagger UI for the Customer API; bootstrap script points at /spec/.
+  - url: https://api.repositpower.com/spec/
+    type: OpenAPI
+    httpStatus: 200
+    note: OpenAPI 3.0.3, harvested verbatim to openapi/reposit-power-customer-api-openapi.yml
+  - url: https://marketapi.repositpower.com/docs/
+    type: APIReference
+    httpStatus: 200
+    note: Swagger UI 4.5.0 for the Market API, page title "Reposit Power Fleet API".
+  - url: https://marketapi.repositpower.com/docs/spec/
+    type: OpenAPI
+    httpStatus: 200
+    note: OpenAPI 3.0.1, harvested verbatim to openapi/reposit-power-market-api-openapi.yml
+  - url: https://fleet.repositpower.com
+    type: Portal
+    httpStatus: 200
+    note: Partner web application and the only issuer of Market API keys. Login only.
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+    type: Regulatory
+    httpStatus: 200
+    note: 84 energy data-holder brands, zero Reposit matches.
+  - url: https://api.cdr.gov.au/cdr-register/v1/all/data-recipients
+    type: Regulatory
+    httpStatus: 200
+    note: Accredited data recipients on x-v:3, zero Reposit matches.
+  - url: https://repositpower.com/about-us
+    type: About
+    httpStatus: 200
+    note: Founded 2012, Canberra, No Bill and Data Centre Grid Services products.
+  - url: https://repositpower.com/
+    type: Website
+    httpStatus: 200
+    note: No mention of API, developers, integrations or Consumer Data Right anywhere on the homepage.
+
+actions:
+  openapiHarvested: true
+  specsSaved: 2
+  apisYmlUpdated: true
+  fabricationCheck: >-
+    Every URL in this file was probed on 2026-07-27 and its HTTP status recorded.
+    Both OpenAPI documents are byte-for-byte as served and both parse. No
+    endpoint, host, scope or specification was inferred or invented. Where a
+    fact came from secondary reporting or from the company's own marketing it is
+    labelled as such and not asserted as verified.
