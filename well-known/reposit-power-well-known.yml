@@ -1,0 +1,55 @@
+generated: '2026-07-27'
+method: searched
+source: live probes of /.well-known/ and adjacent discovery paths, 2026-07-27
+summary: >-
+  Reposit Power serves no /.well-known/ discovery surface on any host. Forty-four
+  probes across four hosts — the two API hosts that serve the OpenAPI contracts,
+  the marketing site and the Fleet partner application — returned HTTP 404 for
+  every path, including security.txt (RFC 9116), openid-configuration,
+  oauth-authorization-server (RFC 8414), oauth-protected-resource (RFC 9728),
+  api-catalog (RFC 9727) and ai-plugin.json. No llms.txt is served either. This
+  is recorded as verified absence, not as an unchecked gap: the company's
+  machine-readable posture is entirely contained in the two OpenAPI documents it
+  serves from /spec/ and /docs/spec/.
+found: 0
+hosts:
+- host: https://api.repositpower.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /llms.txt, status: 404}
+- host: https://marketapi.repositpower.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /llms.txt, status: 404}
+- host: https://repositpower.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /llms.txt, status: 404}
+- host: https://fleet.repositpower.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /llms.txt, status: 404}
+note: >-
+  No apis.yml WellKnown or SecurityTxt pointer is wired from this file, because
+  no well-known document exists to point at. This artifact is the record of the
+  probe, not a claim of a discovery surface.

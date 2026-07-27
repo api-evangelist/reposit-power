@@ -87,6 +87,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/reposit-power-customer-api-openapi.yml
+  - type: Overlay
+    url: overlays/reposit-power-customer-api-overlay.yaml
   - type: APIReference
     url: https://api.repositpower.com/docs/
   - type: Documentation
@@ -137,6 +139,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/reposit-power-market-api-openapi.yml
+  - type: Overlay
+    url: overlays/reposit-power-market-api-overlay.yaml
   - type: APIReference
     url: https://marketapi.repositpower.com/docs/
   - type: Documentation
@@ -146,6 +150,42 @@ apis:
   - type: Contact
     url: mailto:api@repositpower.com
 common:
+- type: AgenticAccess
+  url: agentic-access/reposit-power-agentic-access.yml
+- type: DomainSecurity
+  url: security/reposit-power-domain-security.yml
+- type: Authentication
+  url: authentication/reposit-power-authentication.yml
+- type: Conventions
+  url: conventions/reposit-power-conventions.yml
+- type: ErrorCatalog
+  url: errors/reposit-power-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/reposit-power-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/reposit-power-lifecycle.yml
+- type: Conformance
+  url: conformance/reposit-power-conformance.yml
+- type: DataModel
+  url: data-model/reposit-power-data-model.yml
+- type: Packages
+  url: packages/reposit-power-packages.yml
+- type: SDKs
+  url: packages/reposit-power-packages.yml
+- type: MCPServer
+  url: mcp/reposit-power-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/reposit-power-llms.txt
+- type: Blog
+  url: https://repositpower.com/blog
+- type: BlogRSS
+  url: https://repositpower.com/blog/rss.xml
+- type: Login
+  url: https://fleet.repositpower.com
+- type: Contact
+  url: https://repositpower.com/contact-us
 - type: Website
   url: https://repositpower.com/
 - type: About

@@ -1,0 +1,127 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31 (linked
+  from the Market API spec's info.description; retrieved via the GitHub Gist API
+  2026-07-27, HTTP 200), openapi/reposit-power-market-api-openapi.yml,
+  openapi/reposit-power-customer-api-openapi.yml
+summary: >-
+  Reposit publishes a real, written versioning and deprecation policy — and then
+  makes it almost impossible to read. The Market API specification's own
+  info.description tells callers to "review our versioning and support policy
+  before using the API" and links to a GitHub gist. That gist is secret rather
+  than public, so the link 404s for an ordinary reader in a browser; retrieved
+  through the Gist API it proves to be "Market API Versioning Policy [DRAFT]",
+  created 2017-09-18, last updated 2017-10-03, still marked DRAFT nine years
+  later, and owned by an individual account rather than by the RepositPower
+  organisation. Its content is substantive: a two-tier stability model keyed to
+  the URL path, a 12-month minimum deprecation window for production resources,
+  a one-week notice period for emergency changes, and an explicit taxonomy of
+  compatible, disruptive and emergency change. There is no status page, no SLA
+  document, no changelog and no roadmap on any Reposit host.
+versioning:
+  customer_api:
+    scheme: uri-path
+    current: v2
+    info_version: 2023.5.1
+    docs: https://api.repositpower.com/docs/
+    policy_published: false
+  market_api:
+    scheme: path-prefix stability tiers
+    current: v1
+    info_version: 1.0.0
+    docs: https://marketapi.repositpower.com/docs/
+    policy_url: https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31
+    policy_reachable_in_browser: false
+    policy_status: DRAFT
+    policy_created: '2017-09-18'
+    policy_updated: '2017-10-03'
+    stability_tiers:
+    - tier: production
+      identified_by: endpoints carrying the /api URL path prefix
+      guarantees:
+      - Compatible changes may be made with no advance notice
+      - Emergency changes may be made with 1 week's notice
+      - >-
+        Disruptive changes may not occur; instead a new major version is
+        developed
+      - >-
+        Deprecated resources remain available for at least 12 months after
+        deprecation, with notification
+      - Documentation is provided
+      - Support is provided as per the terms of the contract
+    - tier: prototype-internal
+      identified_by: endpoints without the /api URL path prefix
+      guarantees:
+      - Compatible, disruptive and emergency changes with no advance notice
+      - May be deprecated or removed without notice
+      - No documentation provided
+      - No support provided
+    change_taxonomy:
+    - kind: compatible
+      definition: >-
+        Small in scope and unlikely to break or change semantics — adding
+        endpoints, methods and attributes; documentation changes; changes to
+        undocumented behaviour.
+    - kind: disruptive
+      definition: >-
+        Changing the semantics of existing endpoints; removing endpoints,
+        methods or attributes. Migration paths provided where needed.
+    - kind: emergency
+      definition: >-
+        Unavoidable changes driven by legal compliance, security
+        vulnerabilities or violation of specification.
+deprecation:
+  policy_published: true
+  policy_url: https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31
+  policy_url_reachable: false
+  minimum_notice: 12 months for production (/api) resources
+  notification: >-
+    "Notice will be given when a resource is deprecated. Where relevant
+    documentation will be provided on how to migrate to new end-points.
+    Deprecated resources will be clearly identified in the API documentation
+    along with the date that it was deprecated."
+  stability_on_deprecation: Deprecated resources do not change stability tier
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    The policy is real and specific but is carried entirely by a secret,
+    still-DRAFT gist owned by a personal account. Reposit's own documentation
+    links to it and its intended audience cannot open it. Recorded as a
+    governance finding.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in either OpenAPI carries `deprecated: true`, and neither
+  document identifies any deprecated resource or deprecation date, despite the
+  policy promising that deprecated resources will be clearly identified in the
+  documentation.
+sla:
+  url: null
+  uptime_target: null
+  detail: >-
+    No SLA document is published. The versioning policy states only that
+    "support will be provided as per the terms of the contract", which places
+    availability commitments inside the private partner contract rather than in
+    any public document.
+status_page: null
+status_page_detail: >-
+  Probed 2026-07-27: status.repositpower.com does not resolve in DNS, and
+  https://repositpower.com/status returns HTTP 404. There is no public
+  status/incident surface for either API. No StatusPage pointer is wired.
+changelog: null
+changelog_detail: >-
+  No dated changelog exists on any Reposit host (/changelog and /news both 404
+  on repositpower.com). The only change signals available are the Last-Modified
+  headers on the two served specifications: the Customer API spec was last
+  modified 2024-11-28 and the Market API spec 2025-06-24. No changelog artifact
+  was written, because there is no changelog to capture.
+roadmap: null
+roadmap_detail: 'Probed 2026-07-27: https://repositpower.com/roadmap returns HTTP 404.'
+spec_freshness:
+- spec: openapi/reposit-power-customer-api-openapi.yml
+  served_at: https://api.repositpower.com/spec/
+  last_modified: '2024-11-28'
+- spec: openapi/reposit-power-market-api-openapi.yml
+  served_at: https://marketapi.repositpower.com/docs/spec/
+  last_modified: '2025-06-24'

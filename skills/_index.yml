@@ -1,0 +1,84 @@
+generated: '2026-07-27'
+method: generated
+source: >-
+  openapi/reposit-power-market-api-openapi.yml,
+  openapi/reposit-power-customer-api-openapi.yml,
+  conventions/reposit-power-conventions.yml,
+  errors/reposit-power-problem-types.yml
+note: >-
+  Neither Reposit OpenAPI declares operationIds, so every skill grounds its steps
+  in the HTTP method and path exactly as they appear in the referenced
+  specification. No operation, parameter or field below was invented. Reposit
+  publishes no AGENTS.md or provider-authored skill files (searched 2026-07-27).
+skills:
+- file: reposit-power-read-household-energy.md
+  name: Read a Reposit household's own energy data
+  api: openapi/reposit-power-customer-api-openapi.yml
+  audience: customer
+  consequence: read
+  operations:
+  - POST /v2/auth/login/
+  - POST /v2/auth/refresh/
+  - GET /v2/userkeys/
+  - GET /v2/deployments/{userkey}/components
+  - GET /v2/deployments/{userkey}/battery/capacity
+  - GET /v2/deployments/{userkey}/battery/historical/soc
+  - GET /v2/deployments/{userkey}/generation/historical/p
+  - GET /v2/deployments/{userkey}/inverter/historical/p
+  - GET /v2/deployments/{userkey}/house/historical
+  - GET /v2/deployments/{userkey}/meter/historical/p
+  - GET /v2/deployments/{userkey}/gridcredits/historical
+- file: reposit-power-build-power-station.md
+  name: Build and maintain a Reposit power station
+  api: openapi/reposit-power-market-api-openapi.yml
+  audience: network, retailer
+  consequence: write
+  operations:
+  - GET /api/nodes
+  - GET /api/nodes/{nodeId}/address
+  - GET /api/nodes/{nodeId}/network
+  - GET /api/nodes/{nodeId}/status
+  - GET /api/nodes/{nodeId}/namePlate
+  - GET /api/nodes/{nodeId}/events
+  - GET /api/powerstations
+  - POST /api/powerstations
+  - GET /api/powerstations/{powerstationId}
+  - PUT /api/powerstations/{powerstationId}
+  - DELETE /api/powerstations/{powerstationId}
+- file: reposit-power-run-export-curtailment.md
+  name: Run an export curtailment against a Reposit power station
+  api: openapi/reposit-power-market-api-openapi.yml
+  audience: network, retailer
+  consequence: safety-critical
+  operations:
+  - GET /api/constraints/curtailments
+  - GET /api/curtailments
+  - POST /api/curtailments
+  - GET /api/curtailments/{curtailmentId}
+  - POST /api/curtailments/{curtailmentId}/cancel
+  - GET /api/curtailments/setpoint
+  - POST /api/curtailments/setpoint
+  - POST /api/curtailments/heartbeat
+- file: reposit-power-dispatch-fleet-support.md
+  name: Dispatch a Reposit power station for grid support
+  api: openapi/reposit-power-market-api-openapi.yml
+  audience: network, retailer
+  consequence: safety-critical
+  operations:
+  - GET /api/powerstations
+  - GET /api/powerstations/{powerstationId}/data/latest
+  - GET /api/dispatches
+  - POST /api/dispatches
+  - GET /api/dispatches/{dispatchId}
+  - GET /api/nodes/{nodeId}/events
+- file: reposit-power-read-fleet-telemetry.md
+  name: Read Reposit fleet and power station telemetry
+  api: openapi/reposit-power-market-api-openapi.yml
+  audience: network, retailer, installer
+  consequence: read
+  operations:
+  - GET /api/data
+  - GET /api/powerstations/{powerstationId}/data
+  - GET /api/powerstations/{powerstationId}/data/raw
+  - GET /api/powerstations/{powerstationId}/data/latest
+  - GET /api/powerstations

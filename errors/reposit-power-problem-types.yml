@@ -1,0 +1,149 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  openapi/reposit-power-market-api-openapi.yml,
+  openapi/reposit-power-customer-api-openapi.yml
+format: proprietary
+rfc9457: false
+summary: >-
+  Neither Reposit contract uses RFC 9457 problem+json. Both return
+  application/json with a proprietary envelope. The Market API envelope is
+  {error, message, status} where `status` is the string "error" (or "ERROR" /
+  "NOT FOUND" on 404 — the casing is inconsistent across operations in the spec's
+  own examples) and `error` carries a machine code such as `expired_token` or, on
+  404, a human sentence rather than a code. The Customer API declares no error
+  responses at all in its OpenAPI: every operation documents only a 200, so its
+  401 behaviour is undocumented in the contract and was established by live
+  probe. A third error shape exists inside the 200 response of
+  POST /api/capabilities, which returns per-customer `errors[]` and `warnings[]`
+  arrays each carrying `message`, `errorCode` and the affected `customers[]` NMI
+  list — a batch/partial-failure envelope that never surfaces as an HTTP status.
+envelope:
+  market_api:
+    media_type: application/json
+    fields:
+    - {name: error, description: "Machine code (e.g. expired_token) on 401; a human sentence on 404."}
+    - {name: message, description: Human-readable explanation.}
+    - {name: status, description: "Literal string: error | ERROR | NOT FOUND."}
+  customer_api:
+    media_type: application/json
+    declared_in_spec: false
+    observed: '{"error":"unauthorized"}'
+    note: Observed by anonymous probe 2026-07-27; not declared in the OpenAPI.
+  batch_partial_failure:
+    operation: POST /api/capabilities
+    http_status: 200
+    fields:
+    - {name: 'data[].errors[].message', description: Human-readable failure reason.}
+    - {name: 'data[].errors[].errorCode', description: "Machine code, e.g. invalid_capability."}
+    - {name: 'data[].errors[].customers[]', description: NMIs the failure applies to.}
+    - {name: 'data[].warnings[].errorCode', description: "Machine code, e.g. not_commissioned_customer."}
+    - {name: 'data[].success[]', description: NMIs successfully assigned.}
+problems:
+- status: 401
+  code: expired_token
+  title: Invalid or expired access token
+  detail: >-
+    Invalid access token. If the error code in the returned JSON is
+    `expired_token`, it means you need to request a new access token through the
+    `/auth/login/` route using your username and password.
+  remediation: >-
+    For the Market API, re-issue or replace the API key from Reposit Fleet User
+    Settings; keys themselves do not expire but may be revoked or IP-restricted.
+    For the Customer API, re-authenticate at POST /v2/auth/login/ or exchange the
+    refresh_token at POST /v2/auth/refresh/ when using Reposit-Auth: API.
+  source_operations:
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/nodes
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/nodes/{nodeId}/address
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/nodes/{nodeId}/network
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/nodes/{nodeId}/status
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/nodes/{nodeId}/namePlate
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/nodes/{nodeId}/events
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/powerstations
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/powerstations
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/powerstations/{powerstationId}
+  - openapi/reposit-power-market-api-openapi.yml#PUT /api/powerstations/{powerstationId}
+  - openapi/reposit-power-market-api-openapi.yml#DELETE /api/powerstations/{powerstationId}
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/powerstations/{powerstationId}/data
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/powerstations/{powerstationId}/data/raw
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/powerstations/{powerstationId}/data/latest
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/data
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/curtailments
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/curtailments
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/curtailments/{curtailmentId}
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/curtailments/{curtailmentId}/cancel
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/curtailments/setpoint
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/curtailments/setpoint
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/curtailments/heartbeat
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/dispatches
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/dispatches
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/dispatches/{dispatchId}
+  - openapi/reposit-power-market-api-openapi.yml#POST /api/capabilities
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/users
+- status: 401
+  code: unauthorized
+  title: Unauthorized
+  detail: >-
+    Observed body {"error":"unauthorized","message":"Unauthorized.","status":"error"}
+    returned to anonymous callers on both hosts. Not declared in either OpenAPI.
+  remediation: Present a valid bearer credential for the API being called.
+  source: live probe 2026-07-27
+  declared_in_spec: false
+- status: 404
+  title: Power station not found
+  detail: 'Invalid powerstation UID/ID specified. Example body: {"error":"Powerstation
+    e7430ccb21644d7b9e0a443933f25c7f not found","status":"ERROR"}'
+  remediation: >-
+    List power stations with GET /api/powerstations to obtain a valid ID for the
+    authenticated organisation. A power station belongs to one organisation; an
+    ID from another organisation reads as not found.
+  source_operations:
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/powerstations/{powerstationId}
+  - openapi/reposit-power-market-api-openapi.yml#PUT /api/powerstations/{powerstationId}
+  - openapi/reposit-power-market-api-openapi.yml#DELETE /api/powerstations/{powerstationId}
+- status: 404
+  title: No curtailment setpoint for power station
+  detail: >-
+    A curtailment setpoint for the requested powerstation cannot be found. Either
+    the powerstation has not been created or it has not yet received a valid
+    setpoint. Example body {"message":"No setpoint for powerstation '...' found.",
+    "status":"NOT FOUND"}.
+  remediation: >-
+    POST /api/curtailments/setpoint to establish a default curtailment setpoint
+    before reading it back.
+  source_operations:
+  - openapi/reposit-power-market-api-openapi.yml#GET /api/curtailments/setpoint
+application_errors:
+- code: invalid_capability
+  http_status: 200
+  surface: POST /api/capabilities -> data[].errors[]
+  message: >-
+    Effective start date must be on or after the starting date of the capability
+  remediation: Send a startDate on or after the capability's own start date.
+- code: not_commissioned_customer
+  http_status: 200
+  severity: warning
+  surface: POST /api/capabilities -> data[].warnings[]
+  message: Customer is not yet commissioned
+  remediation: >-
+    The assignment is accepted but the customer's Reposit system is not yet
+    commissioned; re-check node status via GET /api/nodes/{nodeId}/status.
+- code: null
+  http_status: 200
+  surface: POST /api/capabilities -> data[].errors[]
+  message: Customer already assigned to another retailer
+  remediation: >-
+    A National Metering Identifier can be assigned to one retailer at a time;
+    resolve the retailer-of-record conflict out of band.
+- code: null
+  http_status: 200
+  surface: POST /api/capabilities -> data[].errors[]
+  message: Must have a capability code
+  remediation: Include capabilities[].name for every customer in the batch.
+gaps:
+- >-
+  No 400, 403, 409, 422, 429 or 5xx response is declared anywhere in either
+  contract. Validation failures on POST /api/curtailments and POST /api/dispatches
+  (both of which command real household hardware) have no documented error shape.
+- The Customer API declares no error responses at all.
+- No error reference page exists in either documentation site to enrich from.

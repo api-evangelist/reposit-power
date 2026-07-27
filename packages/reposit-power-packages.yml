@@ -1,0 +1,65 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://pypi.org/pypi/reposit/json (HTTP 200, fetched 2026-07-27) and
+  https://api.github.com/orgs/RepositPower/repos (HTTP 200, fetched 2026-07-27)
+summary: >-
+  Reposit Power publishes exactly one first-party client library: the Python
+  package `reposit` on PyPI, authored from a repositpower.com address and
+  mirrored by the RepositPower GitHub organisation. It is a client for the
+  household-scope Customer API surface (account login, userkeys, battery
+  capacity, solar generation) and predates the OpenAPI 3.0.3 contract now served
+  at https://api.repositpower.com/spec/ — it authenticates with a username and
+  password rather than the documented /v2/auth/login/ bearer flow. It is
+  recorded as official because Reposit Power authored and published it, and as
+  unmaintained because the last release was 2019-01-24 and the last commit to
+  its repository was 2021-03-29. There is no JavaScript, Java, .NET, Go, Ruby,
+  PHP or Rust client, and no client of any language for the Market (Fleet) API,
+  which is the surface that actually controls hardware.
+registries_probed:
+- registry: pypi
+  result: one first-party package (`reposit`)
+- registry: npm
+  result: >-
+    no first-party package. The npm package named `reposit`
+    (https://registry.npmjs.org/reposit) is an unrelated CLI for creating remote
+    git repositories and is NOT Reposit Power software.
+- registry: maven-central
+  result: none found
+- registry: nuget
+  result: none found
+- registry: pkg.go.dev
+  result: none found
+- registry: rubygems
+  result: none found
+- registry: packagist
+  result: none found
+- registry: crates.io
+  result: none found
+packages:
+- language: python
+  registry: pypi
+  name: reposit
+  url: https://pypi.org/project/reposit/
+  install: pip install reposit
+  version: 0.4.0
+  released: '2019-01-24'
+  license: Apache-2.0
+  official: true
+  maintained: false
+  source_code: https://github.com/RepositPower/reposit-python-client
+  author: Thomas Basche <thomas.basche@repositpower.com>
+  covers: openapi/reposit-power-customer-api-openapi.yml
+  note: >-
+    Entry points are `reposit.auth.RPConnection(username, password)`,
+    `reposit.Account` and `reposit.Controller`; documented accessors include
+    battery_capacity, battery_min_state_of_charge, has_battery, has_inverter,
+    get_solar_generation and latest_solar_generation. Versions published: 0.3,
+    0.3.1, 0.4.0. Python 2.7 and 3.4-3.7 classifiers only.
+gaps:
+- No client library for the Reposit Power Market (Fleet) API — the
+  curtailment/dispatch control plane has no first-party SDK in any language.
+- >-
+  The published Python client does not implement the documented
+  `Reposit-Auth: Stateless|API` bearer-token flow described in the current
+  Customer API OpenAPI.

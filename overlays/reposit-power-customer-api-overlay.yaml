@@ -1,0 +1,99 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Reposit Customer API
+  version: 1.0.0
+extends: openapi/reposit-power-customer-api-openapi.yml
+x-generated: '2026-07-27'
+x-method: generated
+x-source: >-
+  API Evangelist enrichment round 2026-07-27. Captures our annotations over the
+  contract Reposit serves at https://api.repositpower.com/spec/ without mutating
+  it. Every statement below is derived from the spec itself or from probes
+  recorded in review.yml.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/reposit-power/
+    x-api-evangelist-reviewed: '2026-07-27'
+    x-access-gate: customer-account-required
+    x-access-detail: >-
+      A caller must hold the credentials of an existing Reposit customer with an
+      installed Reposit Controller. There is no signup page, no free tier, no
+      sandbox and no key-issuing console. POST /v2/auth/login/ with fabricated
+      credentials returned HTTP 401 and GET /v2/userkeys/ returned HTTP 401
+      anonymously on 2026-07-27.
+    x-delegation-model: >-
+      Credential sharing. There is no OAuth authorization-code flow, no scope
+      model and no consent dashboard — a third party acts for a household only by
+      holding that household's Reposit username and password.
+    x-regulatory-regime: none
+    x-regulatory-detail: >-
+      This is household consumer energy data of exactly the class the Australian
+      Consumer Data Right was written to liberate, published voluntarily by a
+      company the designation does not reach.
+    x-data-standards: []
+    x-error-envelope-declared: false
+    x-idempotency: unsupported
+    x-rate-limits: undocumented
+- target: $.info
+  update:
+    x-lifecycle:
+      versioning: uri-path
+      current: v2
+      spec_last_modified: '2024-11-28'
+      deprecation_policy: null
+      status_page: null
+      sla: null
+- target: $.info
+  update:
+    x-artifacts:
+      authentication: authentication/reposit-power-authentication.yml
+      conventions: conventions/reposit-power-conventions.yml
+      errors: errors/reposit-power-problem-types.yml
+      lifecycle: lifecycle/reposit-power-lifecycle.yml
+      conformance: conformance/reposit-power-conformance.yml
+      data_model: data-model/reposit-power-data-model.yml
+      packages: packages/reposit-power-packages.yml
+      agentic_access: agentic-access/reposit-power-agentic-access.yml
+      skills: skills/_index.yml
+- target: $.paths['/v2/auth/login/'].post
+  update:
+    x-auth-modes:
+    - mode: Stateless
+      header: 'Reposit-Auth: Stateless'
+      returns: access_token, expires_at
+      note: Full re-login required on expiry.
+    - mode: API
+      header: 'Reposit-Auth: API'
+      returns: access_token, expires_at, refresh_token
+      note: Refresh at POST /v2/auth/refresh/ before expiry.
+    x-observed-failure: 'HTTP 401 {"error":"unauthorized"} with invalid credentials (probed 2026-07-27)'
+    x-error-responses-declared: false
+- target: $.paths['/v2/userkeys/'].get
+  update:
+    x-entry-point: true
+    x-operational-note: >-
+      This is the entry point for every other operation — the userKeys[] it
+      returns are the {userkey} path parameter for all /v2/deployments/ reads.
+- target: $.paths['/v2/deployments/{userkey}/gridcredits/historical'].get
+  update:
+    x-domain-note: >-
+      GridCredits are the earnings Reposit pays a household for grid support, in
+      Australian dollars. This is the only monetary surface on either Reposit API;
+      there is no invoice, statement, tariff or payment operation.
+- target: $.components.schemas.CostHistorical
+  update:
+    x-orphan-schema: >-
+      Declared in components.schemas but referenced by no path in the served
+      document. A retail-cost time series exists in the model and is not exposed.
+- target: $.components.schemas.StreamComponent
+  update:
+    x-schema-defect: >-
+      Uses literal placeholder property names `<uid>` and `<phase>` where a
+      patternProperties / additionalProperties map is meant. Generated clients
+      will emit properties literally named "<uid>".
+- target: $.components.parameters.deltaTParam
+  update:
+    x-sampling-note: >-
+      delta_t is the number of seconds between data points, default 300 (five
+      minutes). Series are returned as arrays of [timestamp, value] pairs.

@@ -1,0 +1,127 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Reposit Power Market API
+  version: 1.0.0
+extends: openapi/reposit-power-market-api-openapi.yml
+x-generated: '2026-07-27'
+x-method: generated
+x-source: >-
+  API Evangelist enrichment round 2026-07-27. Captures our annotations over the
+  contract Reposit serves at https://marketapi.repositpower.com/docs/spec/ without
+  mutating it. Every statement below is derived from the spec itself, from the
+  versioning policy the spec links, or from probes recorded in review.yml.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/reposit-power/
+    x-api-evangelist-reviewed: '2026-07-27'
+    x-access-gate: partner-only
+    x-access-detail: >-
+      API keys are generated only inside the Reposit Fleet web application at
+      https://fleet.repositpower.com/user/settings, which is issued to network,
+      retailer and installer organisations. There is no self-service signup, no
+      sandbox and no free tier. Every /api/* operation returned HTTP 401 to an
+      anonymous caller on 2026-07-27.
+    x-regulatory-regime: none
+    x-regulatory-detail: >-
+      Reposit Power is not a designated Consumer Data Right energy data holder
+      and is not an accredited data recipient — verified against the ACCC CDR
+      Register on 2026-07-27. This contract is published voluntarily.
+    x-data-standards: []
+    x-sector-identifiers: [nmi]
+    x-error-envelope: '{error, message, status}'
+    x-idempotency: unsupported
+    x-rate-limits: undocumented
+- target: $.info
+  update:
+    x-lifecycle:
+      versioning: >-
+        Stability is expressed by URL path prefix — /api is production (v1),
+        anything without the prefix is prototype/internal.
+      deprecation_window: 12 months for production resources
+      policy_url: https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31
+      policy_status: DRAFT, secret gist, not reachable in a browser
+      status_page: null
+      sla: null
+- target: $.info
+  update:
+    x-artifacts:
+      authentication: authentication/reposit-power-authentication.yml
+      conventions: conventions/reposit-power-conventions.yml
+      errors: errors/reposit-power-problem-types.yml
+      lifecycle: lifecycle/reposit-power-lifecycle.yml
+      conformance: conformance/reposit-power-conformance.yml
+      data_model: data-model/reposit-power-data-model.yml
+      agentic_access: agentic-access/reposit-power-agentic-access.yml
+      mcp_candidate: mcp/reposit-power-mcp.yml
+      skills: skills/_index.yml
+- target: $.paths['/api/curtailments'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: safety-critical
+      escalation:
+        human-in-the-loop: required
+    x-side-effect: >-
+      Limits the real power export of every node in the target power station —
+      real Australian households — for the requested duration.
+    x-idempotency: >-
+      Not supported. A retried POST creates a second curtailment; there is no
+      request key and no documented deduplication.
+- target: $.paths['/api/dispatches'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: safety-critical
+      escalation:
+        human-in-the-loop: required
+    x-side-effect: >-
+      Instructs every node in the target power station to deliver real power for
+      the requested duration; powerFactor is honoured only where the account is
+      enabled for power factor/voltage control.
+    x-idempotency: >-
+      Not supported. A retried POST creates a second dispatch.
+- target: $.paths['/api/curtailments/setpoint'].post
+  update:
+    x-agentic-access:
+      action-class: acting
+      consequence: safety-critical
+      escalation:
+        human-in-the-loop: required
+    x-side-effect: >-
+      Changes the standing default curtailment behaviour of a power station. This
+      persists until changed again, unlike a scheduled curtailment.
+- target: $.paths['/api/curtailments/heartbeat'].post
+  update:
+    x-pattern: dead-mans-switch
+    x-operational-note: >-
+      Nodes receiving a heartbeat revert to their default curtailment behaviour
+      if the heartbeat is lost. Callers holding a non-default setpoint must
+      heartbeat continuously.
+- target: $.paths['/api/powerstations/{powerstationId}/data'].get
+  update:
+    x-window-limit: >-
+      format=nodes is limited to a 6 hour window; format=powerstation is limited
+      to a 1 week window.
+- target: $.paths['/api/curtailments'].get.parameters[0].schema
+  update:
+    x-spec-divergence: >-
+      The parameter description documents a CANCELLED filter value that is absent
+      from this enum. Reported as a contract defect, not corrected here.
+- target: $.paths['/api/nodes/{nodeId}/events'].get
+  update:
+    x-summary-defect: >-
+      The summary reads "Name Plate", duplicated from the preceding operation.
+      The operation returns node events.
+- target: $.components.securitySchemes.AccessToken
+  update:
+    x-declaration-divergence: >-
+      Declared as type apiKey with in:header and name:Bearer, but the description
+      instructs callers to send `Authorization: Bearer <key>`. The wire format is
+      an RFC 6750-style bearer credential in the Authorization header; the
+      declaration names the header "Bearer".
+    x-key-properties:
+      expires: false
+      revocable: true
+      ip_allowlist: optional
+      scopes: none — inherits the full permissions of the issuing Fleet user

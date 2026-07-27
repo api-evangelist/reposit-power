@@ -1,0 +1,114 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  openapi/reposit-power-market-api-openapi.yml,
+  openapi/reposit-power-customer-api-openapi.yml, review.yml, live probes
+  2026-07-27
+summary: >-
+  Reposit conforms to OpenAPI as a description standard and to nothing else. Both
+  specifications were grepped for every plausible energy-sector standard and none
+  is referenced: no Green Button or ESPI, no Consumer Data Standards or /cds-au
+  base path, no IEEE 2030.5 / CSIP-AUS / SEP2, no OpenADR, no OCPP or OCPI, no
+  IEC CIM 61968/61970, no Matter or EEBus. The single sector vocabulary present
+  is the Australian National Metering Identifier (NMI), returned by
+  GET /api/nodes/{nodeId}/network and accepted as the customer key on
+  POST /api/capabilities. Reposit is not a designated Consumer Data Right energy
+  data holder and is not an accredited data recipient — verified against the ACCC
+  CDR Register on 2026-07-27 — so no CDR conformance is claimed or expected.
+  Reposit publishes no compliance certifications (no SOC 2, ISO 27001, PCI DSS or
+  equivalent page exists on any host), so no Compliance pointer is wired.
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    Two documents served anonymously and parsing cleanly — OpenAPI 3.0.3
+    (Customer API, /spec/) and OpenAPI 3.0.1 (Market API, /docs/spec/).
+- id: swagger-ui
+  conforms: true
+  evidence: >-
+    Swagger UI 3.x at https://api.repositpower.com/docs/ and Swagger UI 4.5.0 at
+    https://marketapi.repositpower.com/docs/, both HTTP 200 anonymously.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No oauth2 securityScheme in either document. The Market API uses a
+    non-expiring API key; the Customer API uses a password-grant-like login that
+    is not declared as OAuth.
+- id: oidc
+  conforms: false
+  evidence: >-
+    /.well-known/openid-configuration returns HTTP 404 on repositpower.com,
+    api.repositpower.com, marketapi.repositpower.com and fleet.repositpower.com.
+- id: rfc6750-bearer
+  conforms: partial
+  evidence: >-
+    Both APIs transport credentials as `Authorization: Bearer <token>`, but the
+    Market API declares this as `type: apiKey, in: header, name: Bearer` rather
+    than as an http bearer scheme — the declaration does not match the wire
+    format it documents in prose.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are application/json with a proprietary {error, message, status}
+    envelope; application/problem+json appears nowhere. See
+    errors/reposit-power-problem-types.yml.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns HTTP 404 on all four hosts.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns HTTP 404 on all four hosts.
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns HTTP 404 on all four hosts.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    A 12-month deprecation policy exists but no Sunset or Deprecation response
+    header is documented or observed. See lifecycle/reposit-power-lifecycle.yml.
+- id: json-api
+  conforms: false
+  evidence: >-
+    Responses use a proprietary {data, status} envelope on the Market API and
+    bare objects on the Customer API; no JSON:API media type or structure.
+- id: cdr-consumer-data-standards
+  conforms: false
+  evidence: >-
+    Reposit is absent from the ACCC CDR Register energy data-holder brand list
+    (84 brands, 0 matches, HTTP 200 on 2026-07-27) and from the accredited
+    data-recipient list (HTTP 200 on x-v:3, 0 matches). No /cds-au base path, no
+    x-v or x-fapi headers, no consent surface. The designation reaches retailers,
+    distributors and AEMO, not DER aggregators.
+- id: green-button-espi
+  conforms: false
+  evidence: No reference to Green Button, ESPI or NAESB REQ.21 in either specification.
+- id: ieee-2030.5-csip-aus
+  conforms: false
+  evidence: >-
+    No reference to IEEE 2030.5, SEP2 or CSIP-AUS in either specification, despite
+    the Market API being a DER export-control surface — the domain where CSIP-AUS
+    is the emerging Australian profile.
+- id: openadr
+  conforms: false
+  evidence: >-
+    No reference to OpenADR 2.0b or 3.0 in either specification; curtailment and
+    dispatch are modelled proprietarily.
+- id: iec-61968-61970-cim
+  conforms: false
+  evidence: No reference to IEC CIM in either specification.
+- id: ocpp-ocpi
+  conforms: false
+  evidence: No EV charging surface exists on either API.
+- id: nmi-national-metering-identifier
+  conforms: true
+  evidence: >-
+    GET /api/nodes/{nodeId}/network returns an `nmi` field, and
+    POST /api/capabilities keys every customer by `nmi`. The term appears six
+    times across the Market API document.
+compliance_certifications: []
+compliance_note: >-
+  No trust centre, no certification page and no compliance statement was found
+  (probed /trust, /compliance, /security on repositpower.com — all HTTP 404, and
+  trust.repositpower.com / status.repositpower.com do not resolve). No
+  `Compliance` pointer is wired in apis.yml, because there is no published
+  compliance programme to point at.

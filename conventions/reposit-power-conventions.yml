@@ -1,0 +1,174 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  openapi/reposit-power-market-api-openapi.yml,
+  openapi/reposit-power-customer-api-openapi.yml,
+  https://api.repositpower.com/docs/, https://marketapi.repositpower.com/docs/
+summary: >-
+  Two APIs, two different sets of conventions, published by the same company and
+  never reconciled. The Market (Fleet) API wraps every success payload in
+  {data, status} with a hypermedia-ish twist — list responses return URL paths in
+  place of nested objects, resolvable in place through an `expand` CSV query
+  parameter — and pages with offset/limit plus a `meta.count` and `meta.previous`
+  block. The Customer API returns bare typed objects with no envelope, no paging
+  and no expansion, and windows its time series with start/end/delta_t instead.
+  Neither API supports idempotency keys, neither emits a request-correlation
+  header, neither documents rate limiting, and neither uses RFC 9457. Versioning
+  is expressed structurally rather than in a header: the Customer API carries /v2
+  in the path, and the Market API's stability contract is carried by the /api
+  path prefix itself.
+authentication:
+  style: bearer credential in the Authorization header, per API
+  market_api:
+    scheme: >-
+      apiKey declared as components.securitySchemes.AccessToken (in: header,
+      name: Bearer); used as `Authorization: Bearer <api key>`
+    issuance: Reposit Fleet web app, User Settings -> API Keys -> Add API Key
+    expiry: none — keys do not expire, and are revoked manually
+    binding: optional IP allow-list per key
+    scoping: >-
+      none. A key inherits the full permissions of the Fleet user that created
+      it; the spec recommends creating a dedicated low-privilege Fleet account
+      when restricted access is wanted.
+  customer_api:
+    scheme: 'http bearer, bearerFormat JWT (components.securitySchemes.bearerAuth)'
+    issuance: POST /v2/auth/login/ with account username and password
+    modes:
+    - name: Stateless
+      header: 'Reposit-Auth: Stateless'
+      behaviour: short-lived access_token with expires_at; full re-login on expiry
+    - name: API
+      header: 'Reposit-Auth: API'
+      behaviour: access_token plus refresh_token redeemable at POST /v2/auth/refresh/
+  see_also: authentication/reposit-power-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    No idempotency key, request key or replay-protection parameter appears in
+    either contract. This matters more here than it would on a CRUD API: POST
+    /api/curtailments and POST /api/dispatches command real power output on real
+    households, and a retried request has no documented deduplication. The
+    nearest safety mechanism is directional rather than idempotent — POST
+    /api/curtailments/heartbeat implements a dead-man's-switch, where nodes
+    receiving a heartbeat revert to their default curtailment behaviour if the
+    heartbeat is lost.
+  note: >-
+    Recorded as unsupported. No Idempotency pointer is wired in apis.yml, because
+    there is no idempotency contract to point at.
+pagination:
+  style: offset-limit
+  applies_to:
+  - GET /api/nodes/{nodeId}/events
+  - GET /api/curtailments
+  - GET /api/dispatches
+  parameters:
+  - {name: offset, in: query, type: number, default: 0}
+  - {name: limit, in: query, type: number, default: 100}
+  response_fields:
+  - {name: meta.count, description: total number of results available}
+  - {name: meta.previous, description: absolute URL of the previous page}
+  notes:
+  - >-
+    GET /api/nodes/{nodeId}/events returns the first 100 results by default and
+    the spec instructs callers to page explicitly because result sets are large.
+  - >-
+    GET /api/nodes and GET /api/powerstations are unpaged — the full collection
+    for the organisation is returned.
+  - The Customer API has no pagination of any kind.
+expansion:
+  supported: true
+  scope: Market API only
+  parameter: expand
+  format: CSV list of property names, e.g. ?expand=network,address
+  detail: >-
+    Any property whose value is a URL path rather than data can be expanded in
+    place. On GET /api/nodes the expandable properties are address, network,
+    status and namePlate. This is the Market API's substitute for sub-resource
+    fetching and for sparse fieldsets; there is no inverse (no fields= or
+    sparse-fieldset parameter) and no expansion depth control.
+filtering:
+  parameters:
+  - {name: filter, applies_to: [GET /api/curtailments, GET /api/dispatches], values: [UPCOMING, COMPLETED, INPROGRESS, CANCELLED]}
+  - {name: includePredictions, applies_to: [GET /api/powerstations], values: ["true"]}
+  note: >-
+    The CANCELLED value is documented in the description of GET /api/curtailments
+    but is absent from the enum in the same parameter's schema — a real
+    spec/documentation divergence.
+time_series:
+  market_api:
+    parameters: [metrics, start, end, interval, format, fill, maxAge]
+    metrics: >-
+      CSV list drawn from meterVoltage, meterFrequence, meterPower,
+      meterReactivePower, solarPower, solarReactivePower, remainingCharge,
+      batteryPower, inverterReactivePower, inverterApparentPower, meterCurrent
+    phase_suffix: >-
+      When ?format=nodes, a phase may be appended in braces — meterVoltage{a},
+      meterVoltage{a|b}, meterVoltage{*} (equivalent to {a|b|c}). Applies to
+      meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower,
+      solarReactivePower. Phase letters are arbitrary; single-phase installs
+      report on phase a.
+    sign_convention: >-
+      All real power measurements follow a sink convention; all reactive power
+      measurements follow a source convention; apparent power is always positive.
+    windows:
+      format_nodes: requests limited to a 6 hour window
+      format_powerstation: requests limited to a 1 week window
+    fill_policy: >-
+      Empty values are omitted by default; fill=null returns all timestamps with
+      null values. Only `null` is supported.
+    timestamp_semantics:
+      downsampled: timestamps refer to the start of the period
+      raw: timestamps refer to the sample time; alignment across metrics is not guaranteed
+      latest: no timestamps returned; freshness bounded by maxAge (default 30s)
+  customer_api:
+    parameters: [start, end, delta_t]
+    format: UNIX timestamps; delta_t is seconds between data points, default 300
+    shape: arrays of [timestamp, value] pairs keyed by a metric name
+metadata:
+  supported: false
+  detail: No user-defined metadata or tagging surface on either API.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id, correlation-id or trace header is documented or returned in
+    any example on either API.
+versioning:
+  customer_api:
+    scheme: uri-path
+    current: v2
+    info_version: 2023.5.1
+  market_api:
+    scheme: >-
+      path-prefix stability tiers rather than a version number. Endpoints under
+      /api are production and versioned v1 by default; endpoints without the
+      /api prefix are prototype/internal.
+    info_version: 1.0.0
+  see_also: lifecycle/reposit-power-lifecycle.yml
+errors:
+  envelope: '{error, message, status} (Market API); undeclared on the Customer API'
+  rfc9457: false
+  see_also: errors/reposit-power-problem-types.yml
+rate_limiting:
+  documented: false
+  headers: null
+  detail: >-
+    No rate limit, quota or throttling signal is documented in either contract or
+    on either Swagger page. The only documented request bounds are the data-window
+    limits on the Market API telemetry endpoints (6 hours by node, 1 week by
+    power station).
+content_negotiation:
+  request: application/json
+  response: application/json
+  detail: No alternative media types, no compression or encoding negotiation documented.
+identifiers:
+  node_id: 32-character lowercase hex string
+  powerstation_id: 32-character lowercase hex string
+  curtailment_id: UUID v4
+  dispatch_id: UUID v4
+  event_id: UUID v4
+  user_id: 32-character lowercase hex string
+  userkey: opaque string (Customer API battery-system identifier)
+  nmi: >-
+    Australian National Metering Identifier, carried as a string; the only
+    industry-standard identifier used by either API.

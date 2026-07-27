@@ -1,0 +1,278 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  openapi/reposit-power-market-api-openapi.yml,
+  openapi/reposit-power-customer-api-openapi.yml
+summary: >-
+  Two disjoint models over one physical fleet. The Market (Fleet) API models the
+  partner view — an Organisation holds Users and Power Stations, a Power Station
+  aggregates Nodes, and Curtailments and Dispatches are commands issued against a
+  Power Station that fan out to its Nodes and emit Events. The Customer API
+  models the household view — an Account holds Userkeys, and a Deployment behind
+  a Userkey exposes Components, Battery, Solar, Inverter, Meter and GridCredits
+  time series. The two share the same physical device but not one identifier: a
+  Market API Node is keyed by a 32-hex nodeId and an Australian NMI, while a
+  Customer API Deployment is keyed by an opaque userkey, and no operation on
+  either API translates between them. Neither specification declares named
+  component schemas for the Market API entities — the model below is derived from
+  path structure, request bodies and the response examples the spec carries.
+entities:
+- name: Node
+  api: Market API
+  id: nodeId (32-char lowercase hex)
+  description: >-
+    One Reposit-controlled household energy system — the unit the fleet is
+    composed of.
+  operations:
+  - GET /api/nodes
+  - GET /api/nodes/{nodeId}/address
+  - GET /api/nodes/{nodeId}/network
+  - GET /api/nodes/{nodeId}/status
+  - GET /api/nodes/{nodeId}/namePlate
+  - GET /api/nodes/{nodeId}/events
+  fields:
+  - {name: id, type: string}
+  - {name: address, type: url-or-object, expandable: true}
+  - {name: network, type: url-or-object, expandable: true}
+  - {name: status, type: url-or-object, expandable: true}
+  - {name: namePlate, type: url-or-object, expandable: true}
+- name: Address
+  api: Market API
+  description: Physical location of a node.
+  fields: [street_number, street, city, state, postcode, country, lat, lng]
+- name: Network
+  api: Market API
+  description: Grid-connection identity of a node.
+  fields:
+  - {name: nmi, type: string, note: Australian National Metering Identifier}
+- name: OperationalStatus
+  api: Market API
+  description: Latest liveness and operational state of a node.
+  fields:
+  - {name: operationalStatus.lastTimestamp, type: integer}
+  - {name: operationalStatus.lastValue, type: number}
+  - {name: ping.lastTimestamp, type: integer}
+- name: NamePlate
+  api: Market API
+  description: Rated capability of the energy system attached to a node or aggregated over a power station.
+  fields: [batteryCapacity, batteryPower, inverterPower, capacity, power]
+  note: >-
+    The spec's examples use two different shapes for the same concept —
+    {capacity, power} on some power-station responses and
+    {batteryCapacity, batteryPower, inverterPower} on others.
+- name: Event
+  api: Market API
+  id: id (UUID)
+  description: State change on a node, newest first, paged with offset/limit.
+  fields: [id, ts, eventType, description, duration]
+  event_types_seen_in_examples: [DISPATCH, COMMISSIONED]
+- name: PowerStation
+  api: Market API
+  id: powerstationId (32-char lowercase hex)
+  description: >-
+    A named aggregation of nodes — the virtual power plant unit that curtailment
+    and dispatch commands target. STATIC power stations carry an explicit node
+    list; DYNAMIC power stations carry filters (postcodes, state) and absorb
+    matching nodes automatically.
+  operations:
+  - GET /api/powerstations
+  - POST /api/powerstations
+  - GET /api/powerstations/{powerstationId}
+  - PUT /api/powerstations/{powerstationId}
+  - DELETE /api/powerstations/{powerstationId}
+  - GET /api/powerstations/{powerstationId}/data
+  - GET /api/powerstations/{powerstationId}/data/raw
+  - GET /api/powerstations/{powerstationId}/data/latest
+  fields:
+  - {name: id, type: string}
+  - {name: name, type: string, required: true}
+  - {name: description, type: string}
+  - {name: type, type: enum, values: [STATIC, DYNAMIC], default: STATIC}
+  - {name: nodes, type: array of nodeId, required: true}
+  - {name: filters.postcodes, type: array of string}
+  - {name: filters.state, type: enum, values: [ACT, NSW, NT, QLD, SA, TAS, VIC, WA]}
+  - {name: namePlate, type: object}
+- name: Curtailment
+  api: Market API
+  id: curtailmentId (UUID)
+  description: >-
+    A time-bounded export limit applied to a power station. Real power is limited
+    to a negative kW value for a duration starting at a unix timestamp.
+  operations:
+  - GET /api/constraints/curtailments
+  - GET /api/curtailments
+  - POST /api/curtailments
+  - GET /api/curtailments/{curtailmentId}
+  - POST /api/curtailments/{curtailmentId}/cancel
+  fields:
+  - {name: id, type: uuid}
+  - {name: powerstation, type: powerstationId, required: true}
+  - {name: component, type: enum, values: [grid, solar]}
+  - {name: realPowerP, type: number, required: true, note: kW, must be negative}
+  - {name: startTime, type: unix-timestamp, required: true}
+  - {name: duration, type: number, required: true, note: seconds}
+  - {name: state, type: enum, values: [UPCOMING, INPROGRESS, COMPLETED, CANCELLED]}
+  - {name: createdAt, type: unix-timestamp}
+  - {name: request.deploymentsRequested, type: integer}
+  - {name: currentResponse.deploymentsAccepted, type: integer}
+  - {name: nodes, type: array of nodeId}
+- name: CurtailmentSetpoint
+  api: Market API
+  id: keyed by powerstation
+  description: >-
+    Default (standing) curtailment behaviour for a power station, distinct from a
+    scheduled curtailment. Null removes a constraint; other values must be
+    negative.
+  operations:
+  - GET /api/curtailments/setpoint
+  - POST /api/curtailments/setpoint
+  - POST /api/curtailments/heartbeat
+  fields: [powerstation, meterRealPowerP, inverterRealPowerP]
+  note: >-
+    POST /api/curtailments/heartbeat is a dead-man's-switch — nodes receiving a
+    heartbeat return to their default curtailment behaviour if the heartbeat is
+    lost.
+- name: CurtailmentConstraint
+  api: Market API
+  description: >-
+    The capability envelope of a virtual power plant for a proposed curtailment,
+    queried before issuing one.
+  operations: [GET /api/constraints/curtailments]
+  fields: [realPowerP]
+- name: Dispatch
+  api: Market API
+  id: dispatchId (UUID)
+  description: >-
+    A support request instructing a power station to deliver real power (and
+    optionally a power factor) for a duration.
+  operations:
+  - GET /api/dispatches
+  - POST /api/dispatches
+  - GET /api/dispatches/{dispatchId}
+  fields:
+  - {name: id, type: uuid}
+  - {name: powerstation, type: powerstationId, required: true}
+  - {name: component, type: string, note: 'battery in the spec examples'}
+  - {name: startTime, type: unix-timestamp, required: true}
+  - {name: duration, type: integer, required: true, note: seconds}
+  - {name: realPowerP, type: number, required: true, note: kW}
+  - {name: powerFactor, type: number, note: account must be enabled for power factor/voltage control}
+  - {name: powerFactorLeadLag, type: enum, values: [LEADING, LAGGING]}
+  - {name: state, type: enum, values: [UPCOMING, INPROGRESS, COMPLETED]}
+  - {name: request.deploymentsRequested, type: integer}
+  - {name: currentResponse.deploymentsAccepted, type: integer}
+  - {name: currentResponse.deploymentsResponded, type: integer}
+  - {name: currentResponse.rejectedRealPowerP, type: number}
+  - {name: prediction.data, type: array of number}
+  - {name: prediction.deltaSeconds, type: integer}
+  - {name: prediction.startTime, type: unix-timestamp}
+  - {name: nodes, type: array of nodeId}
+- name: Metric
+  api: Market API
+  description: >-
+    Fleet, power-station or node scoped time series. Not a resource with an id —
+    a query surface over meterVoltage, meterFrequence, meterPower,
+    meterReactivePower, solarPower, solarReactivePower, remainingCharge,
+    batteryPower, inverterReactivePower, inverterApparentPower and meterCurrent,
+    optionally phase-split with a {a|b|c} suffix.
+  operations:
+  - GET /api/data
+  - GET /api/powerstations/{powerstationId}/data
+  - GET /api/powerstations/{powerstationId}/data/raw
+  - GET /api/powerstations/{powerstationId}/data/latest
+- name: Capability
+  api: Market API
+  description: >-
+    A named programme (for example a network support scheme) that customers are
+    assigned to in batch, keyed by NMI, with an effective start date and an
+    optional tariff change.
+  operations: [POST /api/capabilities]
+  fields:
+  - {name: 'customers[].nmi', type: string}
+  - {name: 'customers[].capabilities[].name', type: string}
+  - {name: 'customers[].capabilities[].startDate', type: date}
+  - {name: 'customers[].tariff.code', type: string}
+  - {name: 'customers[].tariff.startDate', type: date}
+  - {name: 'customers[].tariff.discount', type: integer}
+- name: User
+  api: Market API
+  id: id (32-char lowercase hex)
+  description: >-
+    A Reposit Fleet user attached to the calling organisation. Contact details
+    are visible only to callers holding the `fleet.my_reposit.users` permission.
+  operations: [GET /api/users]
+  fields: [id, givenName, surname, email]
+- name: Deployment
+  api: Customer API
+  id: userkey (opaque string)
+  description: >-
+    One household installation as seen by its owner. Every Customer API data
+    operation is scoped to a userkey.
+  operations:
+  - GET /v2/userkeys/
+  - GET /v2/deployments/{userkey}/components
+  - GET /v2/deployments/{userkey}/battery/capacity
+  - GET /v2/deployments/{userkey}/battery/historical/soc
+  - GET /v2/deployments/{userkey}/generation/historical/p
+  - GET /v2/deployments/{userkey}/inverter/historical/p
+  - GET /v2/deployments/{userkey}/house/historical
+  - GET /v2/deployments/{userkey}/meter/historical/p
+  - GET /v2/deployments/{userkey}/gridcredits/historical
+- name: Components
+  api: Customer API
+  schema: ComponentsResponse
+  description: Hardware inventory of a deployment.
+  fields:
+  - ac_dc
+  - battery
+  - dc_coupled
+  - frequency_trigger
+  - inverter
+  - load_meter
+  - load_phases
+  - solar_meter
+  - solar_phases
+  - solar_streams_ac
+  - solar_streams_dc
+- name: StreamComponent
+  api: Customer API
+  schema: StreamComponent
+  description: Per-uid solar stream with a name and per-phase mapping.
+- name: Session
+  api: Customer API
+  description: Authentication artefacts — access_token, expires_at, refresh_token.
+  operations: [POST /v2/auth/login/, POST /v2/auth/refresh/]
+  schemas: [LoginRequest, LoginResponse, RefreshRequest, RefreshResponse]
+relationships:
+- {from: Organisation, to: PowerStation, kind: has_many, via: 'implicit (all list operations are organisation-scoped)'}
+- {from: Organisation, to: User, kind: has_many, via: 'GET /api/users'}
+- {from: PowerStation, to: Node, kind: has_many, via: 'nodes[]'}
+- {from: Node, to: Address, kind: has_one, via: 'address (expandable URL)'}
+- {from: Node, to: Network, kind: has_one, via: 'network (expandable URL)'}
+- {from: Node, to: OperationalStatus, kind: has_one, via: 'status (expandable URL)'}
+- {from: Node, to: NamePlate, kind: has_one, via: 'namePlate (expandable URL)'}
+- {from: Node, to: Event, kind: has_many, via: 'GET /api/nodes/{nodeId}/events'}
+- {from: PowerStation, to: Curtailment, kind: has_many, via: 'powerstation'}
+- {from: PowerStation, to: Dispatch, kind: has_many, via: 'powerstation'}
+- {from: PowerStation, to: CurtailmentSetpoint, kind: has_one, via: 'powerstation'}
+- {from: Curtailment, to: Node, kind: has_many, via: 'nodes[]'}
+- {from: Dispatch, to: Node, kind: has_many, via: 'nodes[]'}
+- {from: Dispatch, to: Event, kind: has_many, via: 'events of eventType DISPATCH reference the dispatch id'}
+- {from: PowerStation, to: Metric, kind: has_many, via: '/data, /data/raw, /data/latest'}
+- {from: Capability, to: Node, kind: belongs_to, via: 'nmi (matched to Network.nmi)'}
+- {from: Account, to: Deployment, kind: has_many, via: 'GET /v2/userkeys/ -> userKeys[]'}
+- {from: Deployment, to: Components, kind: has_one, via: '/components'}
+- {from: Deployment, to: Metric, kind: has_many, via: 'battery/solar/inverter/house/meter/gridcredits historical series'}
+cross_api_note: >-
+  Node (Market API) and Deployment (Customer API) are the same physical
+  installation, but there is no published join: nodeId and userkey never appear
+  in the same document, and neither API exposes the other's identifier. The only
+  identifier a third party could correlate on is the NMI, which the Customer API
+  never returns.
+gaps:
+- >-
+  The Market API declares no components.schemas at all — 28 operations return
+  `type: object` with examples only, so every entity above is derived from
+  examples and request bodies rather than from named schemas.
+- No tariff, plan, invoice or payment entity exists on either API.
+- No outage entity; node events and operational status are the nearest equivalent.
