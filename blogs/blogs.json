@@ -1,0 +1,14 @@
+{
+  "repo": "reposit-power",
+  "feeds": [
+    {
+      "source": "https://repositpower.com/blog",
+      "feed_url": "https://repositpower.com/blog/rss.xml",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-01T15:49:00Z"
+}
