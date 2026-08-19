@@ -1,0 +1,429 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Reposit Customer API - OpenAPI 3.0",
+    "version": "2023.5.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "auth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Login route",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.repositpower.com/v2/auth/login/",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Log into your account and receive an authentication token"
+        },
+        {
+          "info": {
+            "name": "Auth token refresh route",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.repositpower.com/v2/auth/refresh/",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Post your refresh token to this route when using API auth in order to get a new token"
+        },
+        {
+          "info": {
+            "name": "This endpoint returns all userkeys/battery system identifiers for the current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/userkeys/",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint returns all userkeys/battery system identifiers for the current user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "deployment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of components of your deployment (the Reposit Box and attached hardware)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/components",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of components of your deployment (the Reposit Box and attached hardware)"
+        },
+        {
+          "info": {
+            "name": "Get the current capacity of the battery (or batteries) of the given deployment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/battery/capacity",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the current capacity of the battery (or batteries) of the given deployment"
+        },
+        {
+          "info": {
+            "name": "Get solar generation data as negative real_power in kW",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/generation/historical/p",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start UNIX timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end UNIX timestamp"
+              },
+              {
+                "name": "delta_t",
+                "value": "",
+                "type": "query",
+                "description": "The number of seconds between each data point"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get solar generation data as negative real_power in kW"
+        },
+        {
+          "info": {
+            "name": "Get battery inverter data as real_power in kW",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/inverter/historical/p",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start UNIX timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end UNIX timestamp"
+              },
+              {
+                "name": "delta_t",
+                "value": "",
+                "type": "query",
+                "description": "The number of seconds between each data point"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get battery inverter data as real_power in kW"
+        },
+        {
+          "info": {
+            "name": "Get house consumption in kW",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/house/historical",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start UNIX timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end UNIX timestamp"
+              },
+              {
+                "name": "delta_t",
+                "value": "",
+                "type": "query",
+                "description": "The number of seconds between each data point"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get house consumption in kW"
+        },
+        {
+          "info": {
+            "name": "Get state of charge of a battery in kWh",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/battery/historical/soc",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start UNIX timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end UNIX timestamp"
+              },
+              {
+                "name": "delta_t",
+                "value": "",
+                "type": "query",
+                "description": "The number of seconds between each data point"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get state of charge of a battery in kWh"
+        },
+        {
+          "info": {
+            "name": "Get real power measurements in kW at the grid connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/meter/historical/p",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start UNIX timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end UNIX timestamp"
+              },
+              {
+                "name": "delta_t",
+                "value": "",
+                "type": "query",
+                "description": "The number of seconds between each data point"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get real power measurements in kW at the grid connection"
+        },
+        {
+          "info": {
+            "name": "Get earned GridCredits in $",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.repositpower.com/v2/deployments/:userkey/gridcredits/historical",
+            "headers": [
+              {
+                "name": "Reposit-Auth",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userkey",
+                "value": "",
+                "type": "path",
+                "description": "The userkey of the deployment to get data for"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start UNIX timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end UNIX timestamp"
+              },
+              {
+                "name": "delta_t",
+                "value": "",
+                "type": "query",
+                "description": "The number of seconds between each data point"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get earned GridCredits in $"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

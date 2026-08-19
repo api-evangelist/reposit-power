@@ -1,0 +1,874 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Reposit Power Market API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Node",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "All Nodes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/nodes",
+            "params": [
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Any property that contains a URL path rather than data can be expanded in place using the expand query string parameter. This is a CSV list of each property name which should be expanded. e.g. `?expand=network,address`\n"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return basic information and URLs on how to obtain more information about nodes. Each URL can also be expanded in place using the `expand` URL parameter"
+        },
+        {
+          "info": {
+            "name": "Address/Location Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/nodes/:nodeId/address",
+            "params": [
+              {
+                "name": "nodeId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the node."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return full address and lat/long information of a node."
+        },
+        {
+          "info": {
+            "name": "Network Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/nodes/:nodeId/network",
+            "params": [
+              {
+                "name": "nodeId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the node."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the NMI for this node."
+        },
+        {
+          "info": {
+            "name": "Operational Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/nodes/:nodeId/status",
+            "params": [
+              {
+                "name": "nodeId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the node."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the latest operational status information for this node."
+        },
+        {
+          "info": {
+            "name": "Name Plate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/nodes/:nodeId/namePlate",
+            "params": [
+              {
+                "name": "nodeId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the node."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns information about the energy system attached to this node."
+        },
+        {
+          "info": {
+            "name": "Name Plate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/nodes/:nodeId/events",
+            "params": [
+              {
+                "name": "nodeId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the node."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "An integer to offset the results by - to use for paging through the total results. If limit is specified, this is set to 0 by default."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "An integer to limit the results by - to use for paging through the total results. By default this is 100, or the maximum number of results (whichever is lower)."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns events and changes in state to this node sorted by time descending. This will only return the first 100 results by default, as the number of results can be quite large. Therefore you must use the `limit` and `offset` parameters as specified below to retrieve either all results, or a page at a time. This endpoint only returns basic information; more details can be retrieved from the endpoint specific to that event type, e.g. from `/api/dispatches`"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Power Station",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "All Power Stations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/powerstations",
+            "params": [
+              {
+                "name": "includePredictions",
+                "value": "",
+                "type": "query",
+                "description": "Optional. Set to `true` to include powerstation predictions in the response."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns a list of power stations associated with the currently authenticated user's organisation."
+        },
+        {
+          "info": {
+            "name": "Create Power Station",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/powerstations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new powerstation and returns its details."
+        },
+        {
+          "info": {
+            "name": "Get Single Power Station",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/powerstations/:powerstationId",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the power station."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the details of the power station with the supplied UID."
+        },
+        {
+          "info": {
+            "name": "Update Power Station",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://marketapi.repositpower.com/api/powerstations/:powerstationId",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the power station."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing powerstation specified by its id and returns its details."
+        },
+        {
+          "info": {
+            "name": "Delete Power Station",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://marketapi.repositpower.com/api/powerstations/:powerstationId",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the power station."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Deletes a powerstation with with the supplied ID."
+        },
+        {
+          "info": {
+            "name": "Data - Downsampled",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/powerstations/:powerstationId/data",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the power station."
+              },
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "This returns downsampled data of metrics for this powerstation.\n\nTimestamps in the response refer to the start of the period.\n\nThe metrics to retreive as a comma separated list of any combination of the following:\n- meterVoltage - The average voltage (V) across all phases as measured at the meter/grid\n- meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid\n- meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid\n- meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid\n- solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array\n- solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array\n- remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system\n- batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system\n- inverterReactivePower - The total (sum) reactive power (var) measured at the inverter\n- inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter\n- meterCurrent - The total (sum) current (Amp) measured at the meter/grid\n\nAll real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.\n\nIf ?format=nodes is specified then you may also request the data to be split by phases by adding a phase letter after the metric name, for example `meterVoltage{a}`. These can be combined to request multiple phases, for example `meterVoltage{a|b}`. Or you can request all phases with an asterix, for example `meterVoltage{*}`. Note that `meterVoltage{*}` is equivalent to `meterVoltage{a|b|c}`. If a phase is specified the above average/sum  aggregation will not be applied and instead you will get back the value for just the specified phase(s).\n\nPhase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.\n\nPlease note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.\n"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start timestamp of the period of data you wish to retreive"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end timestamp of the period of data you wish to retreive"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "The downsampling interval in seconds"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The format you wish to retrieve the results, either `powerstation` or `nodes`. When using nodes, requests are limited to a 6 hour window of data; for powerstation, requests are limited to a 1 week window of data."
+              },
+              {
+                "name": "fill",
+                "value": "",
+                "type": "query",
+                "description": "The fill policy to use for empty values. By default any empty values for a deployment (i.e. a missing chuck of data) are ommitted. Specify `fill=null` to return all times with null values if the data is missing. Only `null` is supported."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return stored metrics for this powerstation or its nodes by downsampling."
+        },
+        {
+          "info": {
+            "name": "Data - Raw",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/powerstations/:powerstationId/data/raw",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the power station."
+              },
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "This returns raw data of metrics for this powerstation as collected by each device.\n\nTimestamps in the response refer to the time at which the data was sampled.\n\nNo guarantees can be made about aligned data. e.g. meterPower may be collected at slightly different times per phases, and meterPower might be collected at a different time than meterVoltage.\n\nThe metrics to retreive as a comma separated list of any combination of the following:\n- meterVoltage - The average voltage (V) across all phases as measured at the meter/grid\n- meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid\n- meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid\n- meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid\n- solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array\n- solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array\n- remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system\n- batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system\n- inverterReactivePower - The total (sum) reactive power (var) measured at the inverter\n- inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter\n- meterCurrent - The total (sum) current (Amp) measured at the meter/grid\n\nAll real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.\n\nIf ?format=nodes is specified then you may also request the data to be split by phases by adding a phase letter after the metric name, for example `meterVoltage{a}`. These can be combined to request multiple phases, for example `meterVoltage{a|b}`. Or you can request all phases with an asterix, for example `meterVoltage{*}`. Note that `meterVoltage{*}` is equivalent to `meterVoltage{a|b|c}`. If a phase is specified the above average/sum  aggregation will not be applied and instead you will get back the value for just the specified phase(s).\n\nPhase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.\n\nPlease note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.\n"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start timestamp of the period of data you wish to retreive"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end timestamp of the period of data you wish to retreive"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The format you which to retreive the results, either `powerstation` or `nodes`"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return stored metrics for this powerstation or its nodes without applying any downsampling."
+        },
+        {
+          "info": {
+            "name": "Data - Latest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/powerstations/:powerstationId/data/latest",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the power station."
+              },
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "This returns the single, most recent (up to a given max age) data point we have for each metric.\n\nNo timestamps are given for this data but you can be sure that no data point will be older than the maxAge query parameter. If you require specific timestamps please consider using the `/data` or `/data/raw` end points.\n\nThe metrics to retreive as a comma separated list of any combination of the following:\n- meterVoltage - The average voltage (V) across all phases as measured at the meter/grid\n- meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid\n- meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid\n- meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid\n- solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array\n- solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array\n- remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system\n- batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system\n- inverterReactivePower - The total (sum) reactive power (var) measured at the inverter\n- inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter\n- meterCurrent - The total (sum) current (Amp) measured at the meter/grid\n\nAll real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.\n\nIf ?format=nodes is specified then you may also request the data to be split by phases by adding a phase letter after the metric name, for example `meterVoltage{a}`. These can be combined to request multiple phases, for example `meterVoltage{a|b}`. Or you can request all phases with an asterix, for example `meterVoltage{*}`. Note that `meterVoltage{*}` is equivalent to `meterVoltage{a|b|c}`. If a phase is specified the above average/sum  aggregation will not be applied and instead you will get back the value for just the specified phase(s).\n\nPhase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.\n\nPlease note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.\n"
+              },
+              {
+                "name": "maxAge",
+                "value": "",
+                "type": "query",
+                "description": "The maximum age of the data that should be considered \"latest\" in seconds"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The format you which to retreive the results, either `powerstation` or `nodes`"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the latest value of the metrics for the powerstation or nodes up to a maximum age of data."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Network",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Fleet Data - Downsampled",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/data",
+            "params": [
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "This returns downsampled data of metrics for this powerstation.\n\nTimestamps in the response refer to the start of the period.\n\nThe metrics to retreive as a comma separated list of any combination of the following:\n- meterVoltage - The average voltage (V) across all phases as measured at the meter/grid\n- meterFrequence - The average frequency (Hz) across all phases as measured at the meter/grid\n- meterPower - The total (sum) real power (kW) across all phases as measured at the meter/grid\n- meterReactivePower - The total (sum) reactive power (var) across all phases as measure at the meter/grid\n- solarPower - The total (sum) real power (kW) across all solar phases being generated by the PV array\n- solarReactivePower - The total (sum) reactive power (var) across all solar phases being generated by the PV array\n- remainingCharge - The total (sum) remaining charge (W) of the all batteries attached to this system\n- batteryPower - The total (sum) real power (kW) measured at the battery of all batteries attached to this system\n- inverterReactivePower - The total (sum) reactive power (var) measured at the inverter\n- inverterApparentPower - The total (sum) apparent power (kW) measured at the inverter\n- meterCurrent - The total (sum) current (Amp) measured at the meter/grid\n\nAll real power measurements follow a sink convention, while all reactive power measurements follow a source convention. Apparent power is always positive.\n\nPhase suffixes may be used on the following metrics: meterVoltage, meterFrequency, meterPower, meterReactivePower, solarPower, solarReactivePower.\n\nPlease note that phases are currently arbitrary - we cannot determine which phase is red/white/blue. For all single phase installations the data will be available on phase a.\n"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "The start timestamp of the period of data you wish to retreive"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "The end timestamp of the period of data you wish to retreive"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "The downsampling interval in seconds"
+              },
+              {
+                "name": "fill",
+                "value": "",
+                "type": "query",
+                "description": "The fill policy to use for empty values. By default any empty values for a deployment (i.e. a missing chuck of data) are ommitted. Specify `fill=null` to return all times with null values if the data is missing. Only `null` is supported."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return stored metrics for the entire fleet by downsampling."
+        },
+        {
+          "info": {
+            "name": "Assign customers to a capability",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/capabilities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Takes a list of customers and assigns them to a capability. Returns a list of changes that have been applied and/or a list or errors."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Curtailment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get curtailment constraints",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/constraints/curtailments",
+            "params": [
+              {
+                "name": "powerstation",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the power station being curtailed."
+              },
+              {
+                "name": "duration",
+                "value": "",
+                "type": "query",
+                "description": "The duration of the curtailment in seconds."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return the constraints of a Virtual Power Plant given a set of query parameters. The parameters correspond to fields to specify when creating a curtailment. This route should be used before executing a curtailment in order to determine the capabilities of that particular Virtual Power Plant."
+        },
+        {
+          "info": {
+            "name": "All Curtailments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/curtailments",
+            "params": [
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "A filter to apply to the returned export curtailments. One of UPCOMING, COMPLETED, INPROGRESS, CANCELLED. Leave empty to view all."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "An integer to offset the results by - to use for paging through the total results."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "An integer to limit the results by - to use for paging through the total results."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns a list of export curtailments."
+        },
+        {
+          "info": {
+            "name": "Create Curtailment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/curtailments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create an export curtailment request."
+        },
+        {
+          "info": {
+            "name": "Get Single Curtailment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/curtailments/:curtailmentId",
+            "params": [
+              {
+                "name": "curtailmentId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the export curtailment."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns detailed data about the export curtailment with the supplied curtailment ID."
+        },
+        {
+          "info": {
+            "name": "Cancel Curtailment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/curtailments/:curtailmentId/cancel",
+            "params": [
+              {
+                "name": "curtailmentId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the export curtailment."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Cancels a scheduled curtailment"
+        },
+        {
+          "info": {
+            "name": "Get Curtailment Setpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/curtailments/setpoint",
+            "params": [
+              {
+                "name": "powerstationId",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the powerstation to query."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the current setpoint for default curtailment behaviour."
+        },
+        {
+          "info": {
+            "name": "Change Curtailment Setpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/curtailments/setpoint",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Change the setpoint for default curtailment behaviour."
+        },
+        {
+          "info": {
+            "name": "Curtailment Heartbeat",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/curtailments/heartbeat",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Send a curtailment heartbeat to a powerstation. Nodes receiving a heartbeat will return to their default curtailment behaviour if the heartbeat is lost."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Dispatch",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "All Dispatches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/dispatches",
+            "params": [
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "A filter to apply to the returned dispatches/support requests. One of UPCOMING, COMPLETED, INPROGRESS or left empty to view all."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "An integer to offset the results by - to use for paging through the total results."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "An integer to limit the results by - to use for paging through the total results."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return all dispatches/support requests with their basic details."
+        },
+        {
+          "info": {
+            "name": "Create Dispatch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://marketapi.repositpower.com/api/dispatches",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new dispatch with the specified details"
+        },
+        {
+          "info": {
+            "name": "Get Single Dispatch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/dispatches/:dispatchId",
+            "params": [
+              {
+                "name": "dispatchId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the dispatch/support request for which to fetch details."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Return detailed data about a specific dispatch/support request as specified by the dispatchId in the URL."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "View a list of all users assigned to your marketapi account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://marketapi.repositpower.com/api/users",
+            "auth": {
+              "type": "apikey",
+              "key": "Bearer",
+              "value": "{{Bearer}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns a list of users that are associated with your marketapi account. This response may vary depending on the level of permissions you have. Users with the \"fleet.my_reposit.users\" permission will be able to see contact details for users. Other users will be able to see names and IDs only."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

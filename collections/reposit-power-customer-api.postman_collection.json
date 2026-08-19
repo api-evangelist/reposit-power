@@ -1,0 +1,2121 @@
+{
+  "item": [
+    {
+      "id": "5be30157-7f8a-4e8a-b988-76dfcc69659d",
+      "name": "auth",
+      "description": {
+        "content": "Authentication operations",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a24542b8-7474-46f5-aff9-44c300f55560",
+          "name": "Login route",
+          "request": {
+            "name": "Login route",
+            "description": {
+              "content": "Log into your account and receive an authentication token",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "auth",
+                "login",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ee740c91-af7c-4690-a1ff-f9441a5dc682",
+              "name": "Successful login",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "auth",
+                    "login",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\",\n  \"expires_at\": 479\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5c485b9b-44f9-4d24-99dc-64d7295bc2e2",
+          "name": "Auth token refresh route",
+          "request": {
+            "name": "Auth token refresh route",
+            "description": {
+              "content": "Post your refresh token to this route when using API auth in order to get a new token",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "auth",
+                "refresh",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1a3e2737-b143-4afe-910f-721bd21284a2",
+              "name": "Successful login",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "auth",
+                    "refresh",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "28d4eff2-f7d6-4c8a-9266-ea0dee1e58c7",
+          "name": "This endpoint returns all userkeys/battery system identifiers for the current user",
+          "request": {
+            "name": "This endpoint returns all userkeys/battery system identifiers for the current user",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "userkeys",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "948be95f-57b0-469b-b9aa-96adb47587e6",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "userkeys",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userKeys\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "4b13348e-28d3-4be9-870c-5edd0ebf064f",
+      "name": "deployment",
+      "description": {
+        "content": "Deployment operations",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0cb82de2-741e-49e8-8bf4-8b244d250cd7",
+          "name": "Get a list of components of your deployment (the Reposit Box and attached hardware)",
+          "request": {
+            "name": "Get a list of components of your deployment (the Reposit Box and attached hardware)",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "components"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2dae4b22-ffc7-4b38-9694-9dd3d56d0afc",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "components"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"ac_dc\": false,\n    \"battery\": true,\n    \"dc_coupled\": false,\n    \"frequency_trigger\": true,\n    \"inverter\": false,\n    \"load_meter\": true,\n    \"load_phases\": [\n      \"string\",\n      \"string\"\n    ],\n    \"solar_meter\": true,\n    \"solar_phases\": [\n      \"string\",\n      \"string\"\n    ],\n    \"solar_streams_ac\": {\n      \"<uid>\": {\n        \"name\": \"string\",\n        \"phases\": {\n          \"<phase>\": \"string\"\n        }\n      }\n    },\n    \"solar_streams_dc\": {\n      \"<uid>\": {\n        \"name\": \"string\",\n        \"phases\": {\n          \"<phase>\": \"string\"\n        }\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c6ad6ba5-9752-4101-b31e-edb678df34a5",
+          "name": "Get the current capacity of the battery (or batteries) of the given deployment",
+          "request": {
+            "name": "Get the current capacity of the battery (or batteries) of the given deployment",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "battery",
+                "capacity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f61b19b6-d107-4210-8d53-98ff163d1f6f",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "battery",
+                    "capacity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batteryCapacity\": 3813.4420071049403\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ca77ee53-4c04-48d4-8a9a-f6989644d391",
+          "name": "Get solar generation data as negative real_power in kW",
+          "request": {
+            "name": "Get solar generation data as negative real_power in kW",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "generation",
+                "historical",
+                "p"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1657a40a-4cc2-488a-9172-308a27350efe",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "generation",
+                    "historical",
+                    "p"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"solarP\": [\n    [\n      5504.963858298576,\n      1452.3081373537261\n    ],\n    [\n      2563.4666496967693,\n      3865.3736670148796\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2263b328-83ca-4255-ab82-7daefde661e2",
+          "name": "Get battery inverter data as real_power in kW",
+          "request": {
+            "name": "Get battery inverter data as real_power in kW",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "inverter",
+                "historical",
+                "p"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8cf03ff1-7b7a-4de8-95dc-daa42569f7bf",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "inverter",
+                    "historical",
+                    "p"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"inverterP\": [\n    [\n      8064.480314962094,\n      6019.093277946314\n    ],\n    [\n      9690.955849844679,\n      5780.933251865982\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5822dd72-765a-4402-9291-226591fbee33",
+          "name": "Get house consumption in kW",
+          "request": {
+            "name": "Get house consumption in kW",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "house",
+                "historical"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e903b5e0-12b1-4fea-8527-35c299a72fc3",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "house",
+                    "historical"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"components\": {\n      \"data\": {\n        \"ac_dc\": true,\n        \"battery\": false,\n        \"dc_coupled\": true,\n        \"frequency_trigger\": false,\n        \"inverter\": false,\n        \"load_meter\": true,\n        \"load_phases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"solar_meter\": false,\n        \"solar_phases\": [\n          \"string\",\n          \"string\"\n        ],\n        \"solar_streams_ac\": {\n          \"<uid>\": {\n            \"name\": \"string\",\n            \"phases\": {\n              \"<phase>\": \"string\"\n            }\n          }\n        },\n        \"solar_streams_dc\": {\n          \"<uid>\": {\n            \"name\": \"string\",\n            \"phases\": {\n              \"<phase>\": \"string\"\n            }\n          }\n        }\n      }\n    },\n    \"houseP\": [\n      [\n        8199.31926076476,\n        8207.581887327857\n      ],\n      [\n        1335.8881689168823,\n        2079.4995438801434\n      ]\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bda93b6a-5989-45db-8b52-f138dc63b87e",
+          "name": "Get state of charge of a battery in kWh",
+          "request": {
+            "name": "Get state of charge of a battery in kWh",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "battery",
+                "historical",
+                "soc"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a46af856-3cba-4b39-af3d-6259cbc2be67",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "battery",
+                    "historical",
+                    "soc"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batteryCapacity\": 4318.307977167197,\n  \"batterySOC\": [\n    [\n      289.37805489062106,\n      9588.304782930176\n    ],\n    [\n      5950.708291711414,\n      5415.285513375535\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "724bd290-48c3-4df2-9af5-34103e948586",
+          "name": "Get real power measurements in kW at the grid connection",
+          "request": {
+            "name": "Get real power measurements in kW at the grid connection",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "meter",
+                "historical",
+                "p"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f740d712-b881-4d1c-82b9-9618d72fa39d",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "meter",
+                    "historical",
+                    "p"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"meterP\": [\n    [\n      6275.028023906263,\n      5206.246923664208\n    ],\n    [\n      9367.01664244013,\n      6321.005486544314\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b903fd73-a72f-4c78-aa22-79fee6c23a17",
+          "name": "Get earned GridCredits in $",
+          "request": {
+            "name": "Get earned GridCredits in $",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "gridcredits",
+                "historical"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f566ca9d-de51-4e88-913c-e3f340fb39e1",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "gridcredits",
+                    "historical"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"gridcredits\": [\n    [\n      3170.788341961771,\n      2782.0598725144428\n    ],\n    [\n      9738.84605693191,\n      852.6275068829159\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "1ccfa76a-f258-466c-82bb-b833660665d7",
+      "name": "battery",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3c734eb2-30a7-4585-9d79-a50ee2b95af7",
+          "name": "Get the current capacity of the battery (or batteries) of the given deployment",
+          "request": {
+            "name": "Get the current capacity of the battery (or batteries) of the given deployment",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "battery",
+                "capacity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "34e3634d-c6e7-4964-87e9-09b6d2b8f21b",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "battery",
+                    "capacity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batteryCapacity\": 3813.4420071049403\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "e073345c-fa78-4763-8303-92f63215d074",
+      "name": "solar",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0b9a738d-f983-4d2e-bbda-d8875b0b86a8",
+          "name": "Get solar generation data as negative real_power in kW",
+          "request": {
+            "name": "Get solar generation data as negative real_power in kW",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "generation",
+                "historical",
+                "p"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "177e8e69-677d-4597-a9d1-7198ba09d833",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "generation",
+                    "historical",
+                    "p"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"solarP\": [\n    [\n      9630.777011564769,\n      6211.038265652518\n    ],\n    [\n      1056.5673209800286,\n      2532.9676837016314\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6c2e1285-335d-4d97-8f0c-553b8b988518",
+          "name": "Get battery inverter data as real_power in kW",
+          "request": {
+            "name": "Get battery inverter data as real_power in kW",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "inverter",
+                "historical",
+                "p"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "19da6f3f-521a-44f6-9b84-adfca51bb80b",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "inverter",
+                    "historical",
+                    "p"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"inverterP\": [\n    [\n      8064.480314962094,\n      6019.093277946314\n    ],\n    [\n      9690.955849844679,\n      5780.933251865982\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "2d113edd-6784-424a-9d08-3b7dbc4a9b0b",
+      "name": "inverter",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "62a2f819-3578-4568-86c9-21763eaf1701",
+          "name": "Get battery inverter data as real_power in kW",
+          "request": {
+            "name": "Get battery inverter data as real_power in kW",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "deployments",
+                ":userkey",
+                "inverter",
+                "historical",
+                "p"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<integer>",
+                  "description": "The start UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end",
+                  "value": "<integer>",
+                  "description": "The end UNIX timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "delta_t",
+                  "value": "300",
+                  "description": "The number of seconds between each data point"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userkey",
+                  "description": "(Required) The userkey of the deployment to get data for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The kind of authentication used (API or Stateless)",
+                "key": "Reposit-Auth",
+                "value": "Stateless"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b603721f-c529-4bbf-b527-b61170cad5c8",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "deployments",
+                    ":userkey",
+                    "inverter",
+                    "historical",
+                    "p"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "end",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "delta_t",
+                      "value": "300"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userkey",
+                      "description": "(Required) The userkey of the deployment to get data for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The kind of authentication used (API or Stateless)",
+                    "key": "Reposit-Auth",
+                    "value": "Stateless"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"inverterP\": [\n    [\n      7565.77523499863,\n      2071.5518317215233\n    ],\n    [\n      1654.4024818600433,\n      523.1176092210244\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.repositpower.com/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "47058440-0633-49f5-9f0a-2d3b747c6f41",
+    "name": "Reposit Customer API - OpenAPI 3.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThis is an informal description of external Reposit API provided to Reposit\ncustomers.\n\nAll questions, feedback, feature requests, etc. should be directed to\n<api@repositpower.com>.\n\nHomepage: <https://api.repositpower.com/>\n\nAuthentication types\n====================\n\nThere are two options for authentication, Stateless authentication and API authentication\n\nStateless authentication\n---------\nTo do stateless authentication you need to send the header `Reposit-Auth: Stateless` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The `access_token` that you receive should be sent \nin every subsequent request as a header in the format `Authorization: Bearer <access_token>` This access token \nexpires, with the expiry given to you when you first receive the access token, so you will need to reauthenticate \nafterwards.\n\nAPI authentication\n---\nTo do stateful authentication you need to send the header `Reposit-Auth: API` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The login response will also include a \n`refresh_token` that you can use to refresh your access token before it expires. To do this you need to make a \nrequest to the `/v2/auth/refresh` route (see below).  \nLike in stateless authentication, the `access_token` that you receive should be sent in every subsequent request \nas a header in the format `Authorization: Bearer <access_token>`.\n\nContact Support:\n Email: api@repositpower.com",
+      "type": "text/plain"
+    }
+  }
+}

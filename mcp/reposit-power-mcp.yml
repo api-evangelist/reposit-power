@@ -1,20 +1,14 @@
 generated: '2026-07-27'
 method: derived
 status: candidate
-source: >-
-  openapi/reposit-power-market-api-openapi.yml,
-  openapi/reposit-power-customer-api-openapi.yml
-summary: >-
-  No official or third-party MCP server for Reposit Power exists. Searched the
-  web, the MCP registry and Reposit's own hosts on 2026-07-27; no mcp.* host
-  resolves, no /.well-known/oauth-protected-resource is served, and no tools/list
-  endpoint was found. This is a DERIVED candidate tool list mapped from the two
-  published OpenAPI contracts — a design sketch for a future server, not a
-  published one. It is deliberately split into a read tier and a control tier:
-  eleven of the Market API operations command real power output on real
-  Australian households, and any MCP exposure of them needs the escalation and
-  human-in-the-loop contract captured in
-  agentic-access/reposit-power-agentic-access.yml.
+source: openapi/reposit-power-market-api-openapi.yml, openapi/reposit-power-customer-api-openapi.yml
+summary: 'No official or third-party MCP server for Reposit Power exists. Searched the web, the MCP registry
+  and Reposit''s own hosts on 2026-07-27; no mcp.* host resolves, no /.well-known/oauth-protected-resource
+  is served, and no tools/list endpoint was found. This is a DERIVED candidate tool list mapped from the
+  two published OpenAPI contracts — a design sketch for a future server, not a published one. It is deliberately
+  split into a read tier and a control tier: eleven of the Market API operations command real power output
+  on real Australian households, and any MCP exposure of them needs the escalation and human-in-the-loop
+  contract captured in agentic-access/reposit-power-agentic-access.yml.'
 transport: null
 endpoint: null
 registry_entry: null
@@ -22,7 +16,7 @@ auth:
   market_api:
     scheme: apiKey
     header: Authorization
-    format: 'Bearer <api key generated in Reposit Fleet User Settings>'
+    format: Bearer <api key generated in Reposit Fleet User Settings>
     self_serve: false
   customer_api:
     scheme: http bearer JWT
@@ -30,7 +24,8 @@ auth:
     self_serve: false
 candidate_tools:
 - name: list_nodes
-  description: List every node (household energy system) visible to the organisation, optionally expanding address, network, status and namePlate in place.
+  description: List every node (household energy system) visible to the organisation, optionally expanding
+    address, network, status and namePlate in place.
   maps_to: GET /api/nodes
   tier: read
 - name: get_node_address
@@ -98,7 +93,8 @@ candidate_tools:
   maps_to: GET /api/curtailments
   tier: read
 - name: create_curtailment
-  description: Create an export curtailment limiting a power station's real power for a duration. Commands real household hardware.
+  description: Create an export curtailment limiting a power station's real power for a duration. Commands
+    real household hardware.
   maps_to: POST /api/curtailments
   tier: control
   consequence: safety-critical
@@ -115,12 +111,14 @@ candidate_tools:
   maps_to: GET /api/curtailments/setpoint
   tier: read
 - name: set_curtailment_setpoint
-  description: Change the standing default curtailment setpoint for a power station. Commands real household hardware.
+  description: Change the standing default curtailment setpoint for a power station. Commands real household
+    hardware.
   maps_to: POST /api/curtailments/setpoint
   tier: control
   consequence: safety-critical
 - name: send_curtailment_heartbeat
-  description: Send a curtailment heartbeat; nodes revert to default curtailment behaviour if the heartbeat is lost.
+  description: Send a curtailment heartbeat; nodes revert to default curtailment behaviour if the heartbeat
+    is lost.
   maps_to: POST /api/curtailments/heartbeat
   tier: control
 - name: list_dispatches
@@ -128,7 +126,8 @@ candidate_tools:
   maps_to: GET /api/dispatches
   tier: read
 - name: create_dispatch
-  description: Create a dispatch instructing a power station to deliver real power (and optionally a power factor). Commands real household hardware.
+  description: Create a dispatch instructing a power station to deliver real power (and optionally a power
+    factor). Commands real household hardware.
   maps_to: POST /api/dispatches
   tier: control
   consequence: safety-critical
@@ -199,11 +198,12 @@ coverage:
   candidate_tools: 37
   excluded: 2
 notes:
-- >-
-  Tool input schemas would inherit directly from each operation's parameters and
-  requestBody in the referenced OpenAPI; neither spec declares operationIds, so
-  the mapping above is by method and path.
-- >-
-  No tool crosswalk artifact is emitted, because there is no published MCP server
-  or GraphQL surface to cross-walk against — a crosswalk of a candidate list onto
-  its own source operations would be tautological.
+- Tool input schemas would inherit directly from each operation's parameters and requestBody in the referenced
+  OpenAPI; neither spec declares operationIds, so the mapping above is by method and path.
+- No tool crosswalk artifact is emitted, because there is no published MCP server or GraphQL surface to
+  cross-walk against — a crosswalk of a candidate list onto its own source operations would be tautological.
+deployment:
+  mode: none
+  verified: derived
+  checked: '2026-08-12'
+  source: catalog MCP census
