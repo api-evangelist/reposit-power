@@ -51,105 +51,253 @@ created: '2026-07-27'
 modified: '2026-07-27'
 specificationVersion: '0.23'
 apis:
-- aid: reposit-power:reposit-power-customer-api
-  name: Reposit Customer API
-  description: >-
-    Reposit's own documented REST API for the owner of a Reposit-controlled home
-    energy system, described by a verbatim OpenAPI 3.0.3 contract that the
-    company serves anonymously at https://api.repositpower.com/spec/ (filename
-    openapi.yaml, last-modified 2024-11-28) and renders in Swagger UI at
-    https://api.repositpower.com/docs/. Eleven operations across two declared
-    tags. Two of them log in and refresh; one lists the userkeys — the battery
-    system identifiers — attached to the calling account; the remaining eight
-    read one deployment's hardware components, battery capacity, historical
-    solar generation, battery-inverter real power, house consumption, battery
-    state of charge in kWh, real power at the grid connection, and GridCredits
-    earned in dollars. The spec's own info block calls it "an informal
-    description of external Reposit API provided to Reposit customers" and
-    points feedback at api@repositpower.com. Authentication is a bearer JWT
-    (components.securitySchemes.bearerAuth, type http / scheme bearer /
-    bearerFormat JWT) obtained by POSTing Reposit account credentials to
-    /v2/auth/login/ with a Reposit-Auth header of either Stateless or API; the
-    API variant additionally returns a refresh_token for /v2/auth/refresh/.
-    Access is therefore customer-account-required: a developer who is not a
-    Reposit customer has no way to obtain a token. Confirmed on 2026-07-27 that
-    POST /v2/auth/login/ with junk credentials returns HTTP 401
-    {"error":"unauthorized"} and GET /v2/userkeys/ returns HTTP 401 anonymously.
+- aid: reposit-power:reposit-power-auth-api
+  name: Reposit Power Auth API
+  description: Authentication operations
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
-  - Energy
-  - Australia
-  - Batteries
-  - Solar
-  - Smart Metering
-  - Consumer Data
+  - auth
   properties:
   - type: OpenAPI
-    url: openapi/reposit-power-customer-api-openapi.yml
-  - type: Overlay
-    url: overlays/reposit-power-customer-api-overlay.yaml
+    url: openapi/reposit-power-auth-api-openapi.yml
   - type: APIReference
     url: https://api.repositpower.com/docs/
   - type: Documentation
     url: https://api.repositpower.com/docs/
   - type: Contact
     url: mailto:api@repositpower.com
-- aid: reposit-power:reposit-power-market-api
-  name: Reposit Power Market API
-  description: >-
-    The larger of Reposit's two published contracts, and the one that actually
-    controls hardware. A verbatim OpenAPI 3.0.1 document served anonymously at
-    https://marketapi.repositpower.com/docs/spec/ (filename
-    public-fleet-api.yaml, last-modified 2025-06-24) and rendered in Swagger UI
-    at https://marketapi.repositpower.com/docs/ under the title "Reposit Power
-    Fleet API". The spec describes itself as the API "used by
-    fleet.repositpower.com and related services". Twenty-eight operations across
-    twenty-two paths, tagged by the audience allowed to call them — Network,
-    Retailer, Installer, Customer — and by subject: Node (list deployments and
-    read their address, network NMI, operational status, name plate and events),
-    Power Station (full CRUD over aggregations of nodes, plus downsampled, raw
-    and latest telemetry), Data (fleet-wide downsampled metrics), Curtailment
-    (read constraints, create, list, cancel, get and change an export setpoint,
-    and post a heartbeat), Dispatch (create, list and get export dispatches),
-    Capabilities (assign customers to a capability) and Users. This is the
-    virtual-power-plant control plane: a network or retailer partner can curtail
-    or dispatch the exports of real Australian households through it.
-    Authentication is a bearer API key (components.securitySchemes.AccessToken,
-    type apiKey, in header, name Bearer) that cannot be self-served — the spec's
-    own description states the key is generated inside the logged-in Reposit
-    Fleet web app at https://fleet.repositpower.com/user/settings, inherits that
-    account's permissions, never expires, may be pinned to whitelisted origin IP
-    addresses, and is revocable from the same screen. Fleet accounts are issued
-    to partner organisations, so the real gate is a commercial relationship with
-    Reposit. Confirmed on 2026-07-27 that GET /api/nodes, /api/powerstations,
-    /api/data, /api/curtailments, /api/dispatches and /api/users all return HTTP
-    401 {"error":"unauthorized"} anonymously.
-  humanURL: https://marketapi.repositpower.com/docs/
-  baseURL: https://marketapi.repositpower.com/
-  tags:
-  - Energy
-  - Australia
-  - DER
-  - Virtual Power Plant
-  - Demand Response
-  - Grid
-  - Curtailment
-  - Dispatch
-  properties:
-  - type: OpenAPI
-    url: openapi/reposit-power-market-api-openapi.yml
-  - type: Overlay
-    url: overlays/reposit-power-market-api-overlay.yaml
   - type: APIReference
     url: https://marketapi.repositpower.com/docs/
   - type: Documentation
     url: https://marketapi.repositpower.com/docs/
   - type: Portal
     url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-battery-api
+  name: Reposit Power Battery API
+  description: The battery API from Reposit Power — 1 operation(s) for battery.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - battery
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-battery-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
   - type: Contact
     url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-curtailment-api
+  name: Reposit Power Curtailment API
+  description: API end-points related to export curtailments.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Curtailment
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-curtailment-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-deployment-api
+  name: Reposit Power Deployment API
+  description: Deployment operations
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - deployment
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-deployment-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-dispatch-api
+  name: Reposit Power Dispatch API
+  description: API end-points related to export dispatches.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Dispatch
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-dispatch-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-inverter-api
+  name: Reposit Power Inverter API
+  description: The inverter API from Reposit Power — 1 operation(s) for inverter.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - inverter
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-inverter-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-network-api
+  name: Reposit Power Network API
+  description: Indicates this API end-point is available to network organisations.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Network
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-network-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-node-api
+  name: Reposit Power Node API
+  description: API end-points related to deployments.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Node
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-node-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-power-station-api
+  name: Reposit Power Power Station API
+  description: API end-points related to powerstations.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Power Station
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-power-station-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-solar-api
+  name: Reposit Power Solar API
+  description: The solar API from Reposit Power — 2 operation(s) for solar.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - solar
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-solar-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
+- aid: reposit-power:reposit-power-users-api
+  name: Reposit Power Users API
+  description: End-points relating to the management of your Reposit Fleet and marketapi users.
+  humanURL: https://api.repositpower.com/docs/
+  baseURL: https://api.repositpower.com/
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/reposit-power-users-api-openapi.yml
+  - type: APIReference
+    url: https://api.repositpower.com/docs/
+  - type: Documentation
+    url: https://api.repositpower.com/docs/
+  - type: Contact
+    url: mailto:api@repositpower.com
+  - type: APIReference
+    url: https://marketapi.repositpower.com/docs/
+  - type: Documentation
+    url: https://marketapi.repositpower.com/docs/
+  - type: Portal
+    url: https://fleet.repositpower.com
 common:
+- type: Overlay
+  url: overlays/reposit-power-customer-api-overlay.yaml
+- type: Overlay
+  url: overlays/reposit-power-market-api-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/reposit-power-agentic-access.yml
 - type: DomainSecurity
