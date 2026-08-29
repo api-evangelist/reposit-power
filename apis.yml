@@ -31,6 +31,18 @@ description: >-
   Consumer Data Standards conformance and no reference to IEEE 2030.5, CSIP-AUS,
   OpenADR or IEC CIM anywhere in either specification; the shape is proprietary,
   with the Australian National Meter Identifier as its only sector identifier.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/reposit-power.png
 tags:
 - Energy
