@@ -1,0 +1,323 @@
+openapi: 3.2.0
+info:
+  title: Reposit Customer API - OpenAPI 3.0 Deployment API
+  description: "\nThis is an informal description of external Reposit API provided to Reposit\ncustomers.\n\nAll questions, feedback, feature requests, etc. should be directed to\n<api@repositpower.com>.\n\nHomepage: <https://api.repositpower.com/>\n\nAuthentication types\n====================\n\nThere are two options for authentication, Stateless authentication and API authentication\n\nStateless authentication\n---------\nTo do stateless authentication you need to send the header `Reposit-Auth: Stateless` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The `access_token` that you receive should be sent \nin every subsequent request as a header in the format `Authorization: Bearer <access_token>` This access token \nexpires, with the expiry given to you when you first receive the access token, so you will need to reauthenticate \nafterwards.\n\nAPI authentication\n---\nTo do stateful authentication you need to send the header `Reposit-Auth: API` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The login response will also include a \n`refresh_token` that you can use to refresh your access token before it expires. To do this you need to make a \nrequest to the `/v2/auth/refresh` route (see below).  \nLike in stateless authentication, the `access_token` that you receive should be sent in every subsequent request \nas a header in the format `Authorization: Bearer <access_token>`."
+  contact:
+    email: api@repositpower.com
+  version: 2023.5.1
+servers:
+- url: https://api.repositpower.com/
+tags:
+- name: deployment
+  description: Deployment operations
+paths:
+  /v2/deployments/{userkey}/components:
+    get:
+      tags:
+      - deployment
+      summary: Get a list of components of your deployment (the Reposit Box and attached hardware)
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentsResponse'
+  /v2/deployments/{userkey}/battery/capacity:
+    get:
+      tags:
+      - deployment
+      summary: Get the current capacity of the battery (or batteries) of the given deployment
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatteryCapacity'
+  /v2/deployments/{userkey}/generation/historical/p:
+    get:
+      tags:
+      - deployment
+      summary: Get solar generation data as negative real_power in kW
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationHistoricalP'
+  /v2/deployments/{userkey}/inverter/historical/p:
+    get:
+      tags:
+      - deployment
+      summary: Get battery inverter data as real_power in kW
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InverterHistoricalP'
+  /v2/deployments/{userkey}/house/historical:
+    get:
+      tags:
+      - deployment
+      summary: Get house consumption in kW
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseHistorical'
+  /v2/deployments/{userkey}/battery/historical/soc:
+    get:
+      tags:
+      - deployment
+      summary: Get state of charge of a battery in kWh
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatteryHistoricalSoC'
+  /v2/deployments/{userkey}/meter/historical/p:
+    get:
+      tags:
+      - deployment
+      summary: Get real power measurements in kW at the grid connection
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterHistoricalP'
+  /v2/deployments/{userkey}/gridcredits/historical:
+    get:
+      tags:
+      - deployment
+      summary: Get earned GridCredits in $
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GridCreditsHistorical'
+components:
+  schemas:
+    MeterHistoricalP:
+      type: object
+      properties:
+        meterP:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    StreamComponent:
+      type: object
+      properties:
+        <uid>:
+          type: object
+          properties:
+            name:
+              type: string
+            phases:
+              type: object
+              properties:
+                <phase>:
+                  type: string
+    HouseHistorical:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            components:
+              $ref: '#/components/schemas/ComponentsResponse'
+            houseP:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+    GridCreditsHistorical:
+      type: object
+      properties:
+        gridcredits:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    BatteryHistoricalSoC:
+      type: object
+      properties:
+        batteryCapacity:
+          type: number
+        batterySOC:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    GenerationHistoricalP:
+      type: object
+      properties:
+        solarP:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    InverterHistoricalP:
+      type: object
+      properties:
+        inverterP:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    ComponentsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            ac_dc:
+              type: boolean
+            battery:
+              type: boolean
+            dc_coupled:
+              type: boolean
+            frequency_trigger:
+              type: boolean
+            inverter:
+              type: boolean
+            load_meter:
+              type: boolean
+            load_phases:
+              type: array
+              items:
+                type: string
+            solar_meter:
+              type: boolean
+            solar_phases:
+              type: array
+              items:
+                type: string
+            solar_streams_ac:
+              $ref: '#/components/schemas/StreamComponent'
+            solar_streams_dc:
+              $ref: '#/components/schemas/StreamComponent'
+    BatteryCapacity:
+      type: object
+      properties:
+        batteryCapacity:
+          description: Battery capacity from 0.0 to 1.0 (0% to 100%)
+          type: number
+  parameters:
+    endParam:
+      name: end
+      in: query
+      description: The end UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    startParam:
+      name: start
+      in: query
+      description: The start UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    userkeyParam:
+      name: userkey
+      in: path
+      description: The userkey of the deployment to get data for
+      required: true
+      schema:
+        type: string
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
+    deltaTParam:
+      name: delta_t
+      in: query
+      description: The number of seconds between each data point
+      required: false
+      schema:
+        type: integer
+        default: 300
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

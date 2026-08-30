@@ -1,0 +1,114 @@
+openapi: 3.2.0
+info:
+  title: Reposit Customer API - OpenAPI 3.0 Solar API
+  description: "\nThis is an informal description of external Reposit API provided to Reposit\ncustomers.\n\nAll questions, feedback, feature requests, etc. should be directed to\n<api@repositpower.com>.\n\nHomepage: <https://api.repositpower.com/>\n\nAuthentication types\n====================\n\nThere are two options for authentication, Stateless authentication and API authentication\n\nStateless authentication\n---------\nTo do stateless authentication you need to send the header `Reposit-Auth: Stateless` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The `access_token` that you receive should be sent \nin every subsequent request as a header in the format `Authorization: Bearer <access_token>` This access token \nexpires, with the expiry given to you when you first receive the access token, so you will need to reauthenticate \nafterwards.\n\nAPI authentication\n---\nTo do stateful authentication you need to send the header `Reposit-Auth: API` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The login response will also include a \n`refresh_token` that you can use to refresh your access token before it expires. To do this you need to make a \nrequest to the `/v2/auth/refresh` route (see below).  \nLike in stateless authentication, the `access_token` that you receive should be sent in every subsequent request \nas a header in the format `Authorization: Bearer <access_token>`."
+  contact:
+    email: api@repositpower.com
+  version: 2023.5.1
+servers:
+- url: https://api.repositpower.com/
+tags:
+- name: solar
+paths:
+  /v2/deployments/{userkey}/generation/historical/p:
+    get:
+      tags:
+      - solar
+      summary: Get solar generation data as negative real_power in kW
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationHistoricalP'
+  /v2/deployments/{userkey}/inverter/historical/p:
+    get:
+      tags:
+      - solar
+      summary: Get battery inverter data as real_power in kW
+      parameters:
+      - $ref: '#/components/parameters/userkeyParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/endParam'
+      - $ref: '#/components/parameters/deltaTParam'
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InverterHistoricalP'
+components:
+  parameters:
+    endParam:
+      name: end
+      in: query
+      description: The end UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
+    startParam:
+      name: start
+      in: query
+      description: The start UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    userkeyParam:
+      name: userkey
+      in: path
+      description: The userkey of the deployment to get data for
+      required: true
+      schema:
+        type: string
+    deltaTParam:
+      name: delta_t
+      in: query
+      description: The number of seconds between each data point
+      required: false
+      schema:
+        type: integer
+        default: 300
+  schemas:
+    GenerationHistoricalP:
+      type: object
+      properties:
+        solarP:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    InverterHistoricalP:
+      type: object
+      properties:
+        inverterP:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

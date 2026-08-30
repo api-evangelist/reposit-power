@@ -1,0 +1,117 @@
+openapi: 3.2.0
+info:
+  title: Reposit Customer API - OpenAPI 3.0 Auth API
+  description: "\nThis is an informal description of external Reposit API provided to Reposit\ncustomers.\n\nAll questions, feedback, feature requests, etc. should be directed to\n<api@repositpower.com>.\n\nHomepage: <https://api.repositpower.com/>\n\nAuthentication types\n====================\n\nThere are two options for authentication, Stateless authentication and API authentication\n\nStateless authentication\n---------\nTo do stateless authentication you need to send the header `Reposit-Auth: Stateless` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The `access_token` that you receive should be sent \nin every subsequent request as a header in the format `Authorization: Bearer <access_token>` This access token \nexpires, with the expiry given to you when you first receive the access token, so you will need to reauthenticate \nafterwards.\n\nAPI authentication\n---\nTo do stateful authentication you need to send the header `Reposit-Auth: API` when you first login on the \n`/v2/auth/login/` route and also for every subsequent request. The login response will also include a \n`refresh_token` that you can use to refresh your access token before it expires. To do this you need to make a \nrequest to the `/v2/auth/refresh` route (see below).  \nLike in stateless authentication, the `access_token` that you receive should be sent in every subsequent request \nas a header in the format `Authorization: Bearer <access_token>`."
+  contact:
+    email: api@repositpower.com
+  version: 2023.5.1
+servers:
+- url: https://api.repositpower.com/
+tags:
+- name: auth
+  description: Authentication operations
+paths:
+  /v2/auth/login/:
+    post:
+      tags:
+      - auth
+      summary: Login route
+      description: Log into your account and receive an authentication token
+      parameters:
+      - $ref: '#/components/parameters/repositAuthHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /v2/auth/refresh/:
+    post:
+      tags:
+      - auth
+      summary: Auth token refresh route
+      description: Post your refresh token to this route when using API auth in order to get a new token
+      parameters:
+      - $ref: '#/components/parameters/repositAuthHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+  /v2/userkeys/:
+    get:
+      tags:
+      - auth
+      summary: This endpoint returns all userkeys/battery system identifiers for the current user
+      parameters:
+      - $ref: '#/components/parameters/repositAuthHeader'
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserKeys'
+components:
+  schemas:
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserKeys:
+      type: object
+      properties:
+        userKeys:
+          type: array
+          items:
+            type: string
+    RefreshResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        expires_at:
+          type: integer
+  parameters:
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
