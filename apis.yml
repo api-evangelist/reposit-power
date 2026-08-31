@@ -69,6 +69,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -91,6 +93,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - Battery
+  tags_raw:
   - battery
   properties:
   - type: OpenAPI
@@ -135,6 +139,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - Deployment
+  tags_raw:
   - deployment
   properties:
   - type: OpenAPI
@@ -179,6 +185,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - Inverter
+  tags_raw:
   - inverter
   properties:
   - type: OpenAPI
@@ -267,6 +275,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - Solar
+  tags_raw:
   - solar
   properties:
   - type: OpenAPI
@@ -289,6 +299,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
