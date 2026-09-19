@@ -190,7 +190,7 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
-  - Inverter
+  - Inverters
   tags_raw:
   - inverter
   properties:
@@ -214,6 +214,8 @@ apis:
   humanURL: https://api.repositpower.com/docs/
   baseURL: https://api.repositpower.com/
   tags:
+  - Networks
+  tags_raw:
   - Network
   properties:
   - type: OpenAPI
