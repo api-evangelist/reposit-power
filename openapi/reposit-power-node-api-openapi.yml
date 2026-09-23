@@ -3,9 +3,7 @@ info:
   title: Reposit Power Market Node API
   description: 'Documentation for the Reposit Power Market API. Used by fleet.repositpower.com and related services.
 
-    Please review our [versioning and support policy](https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31) before using the API.
-
-    '
+    Please review our versioning and support policy before using the API.'
   contact:
     url: https://www.repositpower.com/
     email: api@repositpower.com
@@ -89,6 +87,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiNodes
+      x-operation-id-source: derived
   /api/nodes/{nodeId}/address:
     get:
       tags:
@@ -132,6 +132,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiNodesByNodeIdAddress
+      x-operation-id-source: derived
   /api/nodes/{nodeId}/network:
     get:
       tags:
@@ -168,6 +170,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiNodesByNodeIdNetwork
+      x-operation-id-source: derived
   /api/nodes/{nodeId}/status:
     get:
       tags:
@@ -208,6 +212,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiNodesByNodeIdStatus
+      x-operation-id-source: derived
   /api/nodes/{nodeId}/namePlate:
     get:
       tags:
@@ -246,6 +252,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiNodesByNodeIdNamePlate
+      x-operation-id-source: derived
   /api/nodes/{nodeId}/events:
     get:
       tags:
@@ -307,6 +315,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiNodesByNodeIdEvents
+      x-operation-id-source: derived
 components:
   securitySchemes:
     AccessToken:

@@ -3,9 +3,7 @@ info:
   title: Reposit Power Market Power Station API
   description: 'Documentation for the Reposit Power Market API. Used by fleet.repositpower.com and related services.
 
-    Please review our [versioning and support policy](https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31) before using the API.
-
-    '
+    Please review our versioning and support policy before using the API.'
   contact:
     url: https://www.repositpower.com/
     email: api@repositpower.com
@@ -71,6 +69,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiPowerstations
+      x-operation-id-source: derived
     post:
       tags:
       - Power Station
@@ -191,6 +191,8 @@ paths:
       security:
       - AccessToken: []
       x-codegen-request-body-name: powerstation
+      operationId: postApiPowerstations
+      x-operation-id-source: derived
   /api/powerstations/{powerstationId}:
     get:
       tags:
@@ -266,6 +268,8 @@ paths:
                   status: ERROR
       security:
       - AccessToken: []
+      operationId: getApiPowerstationsByPowerstationId
+      x-operation-id-source: derived
     put:
       tags:
       - Power Station
@@ -369,6 +373,8 @@ paths:
       security:
       - AccessToken: []
       x-codegen-request-body-name: powerstation
+      operationId: putApiPowerstationsByPowerstationId
+      x-operation-id-source: derived
     delete:
       tags:
       - Power Station
@@ -414,6 +420,8 @@ paths:
                   status: ERROR
       security:
       - AccessToken: []
+      operationId: deleteApiPowerstationsByPowerstationId
+      x-operation-id-source: derived
   /api/powerstations/{powerstationId}/data:
     get:
       tags:
@@ -563,6 +571,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiPowerstationsByPowerstationIdData
+      x-operation-id-source: derived
   /api/powerstations/{powerstationId}/data/raw:
     get:
       tags:
@@ -705,6 +715,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiPowerstationsByPowerstationIdDataRaw
+      x-operation-id-source: derived
   /api/powerstations/{powerstationId}/data/latest:
     get:
       tags:
@@ -820,6 +832,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiPowerstationsByPowerstationIdDataLatest
+      x-operation-id-source: derived
 components:
   securitySchemes:
     AccessToken:

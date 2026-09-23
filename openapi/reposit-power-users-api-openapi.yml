@@ -3,9 +3,7 @@ info:
   title: Reposit Power Market Users API
   description: 'Documentation for the Reposit Power Market API. Used by fleet.repositpower.com and related services.
 
-    Please review our [versioning and support policy](https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31) before using the API.
-
-    '
+    Please review our versioning and support policy before using the API.'
   contact:
     url: https://www.repositpower.com/
     email: api@repositpower.com
@@ -51,6 +49,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiUsers
+      x-operation-id-source: derived
 components:
   securitySchemes:
     AccessToken:

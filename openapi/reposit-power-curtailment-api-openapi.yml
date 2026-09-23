@@ -3,9 +3,7 @@ info:
   title: Reposit Power Market Curtailment API
   description: 'Documentation for the Reposit Power Market API. Used by fleet.repositpower.com and related services.
 
-    Please review our [versioning and support policy](https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31) before using the API.
-
-    '
+    Please review our versioning and support policy before using the API.'
   contact:
     url: https://www.repositpower.com/
     email: api@repositpower.com
@@ -45,6 +43,8 @@ paths:
                     realPowerP: 55
       security:
       - AccessToken: []
+      operationId: getApiConstraintsCurtailments
+      x-operation-id-source: derived
   /api/curtailments:
     get:
       tags:
@@ -109,6 +109,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiCurtailments
+      x-operation-id-source: derived
     post:
       tags:
       - Curtailment
@@ -177,6 +179,8 @@ paths:
       security:
       - AccessToken: []
       x-codegen-request-body-name: curtailment
+      operationId: postApiCurtailments
+      x-operation-id-source: derived
   /api/curtailments/{curtailmentId}:
     get:
       tags:
@@ -226,6 +230,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiCurtailmentsByCurtailmentId
+      x-operation-id-source: derived
   /api/curtailments/{curtailmentId}/cancel:
     post:
       tags:
@@ -261,6 +267,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: postApiCurtailmentsByCurtailmentIdCancel
+      x-operation-id-source: derived
   /api/curtailments/setpoint:
     get:
       tags:
@@ -307,6 +315,8 @@ paths:
                   status: NOT FOUND
       security:
       - AccessToken: []
+      operationId: getApiCurtailmentsSetpoint
+      x-operation-id-source: derived
     post:
       tags:
       - Curtailment
@@ -360,6 +370,8 @@ paths:
       security:
       - AccessToken: []
       x-codegen-request-body-name: setpoint
+      operationId: postApiCurtailmentsSetpoint
+      x-operation-id-source: derived
   /api/curtailments/heartbeat:
     post:
       tags:
@@ -404,6 +416,8 @@ paths:
       security:
       - AccessToken: []
       x-codegen-request-body-name: setpoint
+      operationId: postApiCurtailmentsHeartbeat
+      x-operation-id-source: derived
 components:
   securitySchemes:
     AccessToken:

@@ -3,9 +3,7 @@ info:
   title: Reposit Power Market Dispatch API
   description: 'Documentation for the Reposit Power Market API. Used by fleet.repositpower.com and related services.
 
-    Please review our [versioning and support policy](https://gist.github.com/mleonard87/d5ed0a82760ceb75adc7df0d62bf9c31) before using the API.
-
-    '
+    Please review our versioning and support policy before using the API.'
   contact:
     url: https://www.repositpower.com/
     email: api@repositpower.com
@@ -75,6 +73,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiDispatches
+      x-operation-id-source: derived
     post:
       tags:
       - Dispatch
@@ -145,6 +145,8 @@ paths:
       security:
       - AccessToken: []
       x-codegen-request-body-name: dispatch
+      operationId: postApiDispatches
+      x-operation-id-source: derived
   /api/dispatches/{dispatchId}:
     get:
       tags:
@@ -223,6 +225,8 @@ paths:
                   status: error
       security:
       - AccessToken: []
+      operationId: getApiDispatchesByDispatchId
+      x-operation-id-source: derived
 components:
   securitySchemes:
     AccessToken:

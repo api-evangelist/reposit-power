@@ -1,0 +1,48 @@
+{
+  "provider": "reposit-power",
+  "sources": [
+    "_original/reposit-power-customer-api-openapi.yml",
+    "_original/reposit-power-market-api-openapi.yml"
+  ],
+  "outputs": [
+    "reposit-power-auth-api-openapi.yml",
+    "reposit-power-battery-api-openapi.yml",
+    "reposit-power-deployment-api-openapi.yml",
+    "reposit-power-inverter-api-openapi.yml",
+    "reposit-power-solar-api-openapi.yml",
+    "reposit-power-curtailment-api-openapi.yml",
+    "reposit-power-dispatch-api-openapi.yml",
+    "reposit-power-network-api-openapi.yml",
+    "reposit-power-node-api-openapi.yml",
+    "reposit-power-power-station-api-openapi.yml",
+    "reposit-power-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "reposit-power-customer-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "reposit-power-customer-api-openapi.yml: declared missing tag: battery",
+    "reposit-power-customer-api-openapi.yml: declared missing tag: inverter",
+    "reposit-power-customer-api-openapi.yml: declared missing tag: solar",
+    "reposit-power-market-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "reposit-power-market-api-openapi.yml: declared missing tag: Customer",
+    "reposit-power-market-api-openapi.yml: declared missing tag: Installer",
+    "reposit-power-market-api-openapi.yml: multi-axis tagging (11 tags, 6 first tags, 3.29x duplication over 28 operations) \u2014 split on first tag, 28 operations narrowed",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "reposit-power-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-battery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-curtailment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-deployment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-dispatch-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-inverter-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-network-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-node-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-power-station-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-solar-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "reposit-power-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
