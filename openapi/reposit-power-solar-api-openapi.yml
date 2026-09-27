@@ -58,17 +58,25 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    endParam:
-      name: end
-      in: query
-      description: The end UNIX timestamp
-      required: false
-      schema:
-        type: integer
     startParam:
       name: start
       in: query
       description: The start UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    deltaTParam:
+      name: delta_t
+      in: query
+      description: The number of seconds between each data point
+      required: false
+      schema:
+        type: integer
+        default: 300
+    endParam:
+      name: end
+      in: query
+      description: The end UNIX timestamp
       required: false
       schema:
         type: integer
@@ -86,14 +94,6 @@ components:
       required: true
       schema:
         type: string
-    deltaTParam:
-      name: delta_t
-      in: query
-      description: The number of seconds between each data point
-      required: false
-      schema:
-        type: integer
-        default: 300
   schemas:
     GenerationHistoricalP:
       type: object

@@ -79,16 +79,13 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    RefreshRequest:
-      type: object
-      properties:
-        refresh_token:
-          type: string
-    RefreshResponse:
+    LoginResponse:
       type: object
       properties:
         access_token:
           type: string
+        expires_at:
+          type: integer
     UserKeys:
       type: object
       properties:
@@ -103,13 +100,16 @@ components:
           type: string
         password:
           type: string
-    LoginResponse:
+    RefreshResponse:
       type: object
       properties:
         access_token:
           type: string
-        expires_at:
-          type: integer
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
   parameters:
     repositAuthHeader:
       name: Reposit-Auth
