@@ -32,21 +32,7 @@ paths:
       operationId: getV2DeploymentsByUserkeyBatteryCapacity
       x-operation-id-source: derived
 components:
-  schemas:
-    BatteryCapacity:
-      type: object
-      properties:
-        batteryCapacity:
-          description: Battery capacity from 0.0 to 1.0 (0% to 100%)
-          type: number
   parameters:
-    repositAuthHeader:
-      name: Reposit-Auth
-      in: header
-      description: The kind of authentication used (API or Stateless)
-      schema:
-        type: string
-        default: Stateless
     userkeyParam:
       name: userkey
       in: path
@@ -54,6 +40,20 @@ components:
       required: true
       schema:
         type: string
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
+  schemas:
+    BatteryCapacity:
+      type: object
+      properties:
+        batteryCapacity:
+          description: Battery capacity from 0.0 to 1.0 (0% to 100%)
+          type: number
   securitySchemes:
     bearerAuth:
       type: http

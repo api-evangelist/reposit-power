@@ -36,6 +36,13 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
     startParam:
       name: start
       in: query
@@ -58,13 +65,6 @@ components:
       required: false
       schema:
         type: integer
-    repositAuthHeader:
-      name: Reposit-Auth
-      in: header
-      description: The kind of authentication used (API or Stateless)
-      schema:
-        type: string
-        default: Stateless
     userkeyParam:
       name: userkey
       in: path

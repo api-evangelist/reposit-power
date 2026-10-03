@@ -184,6 +184,43 @@ paths:
       operationId: getV2DeploymentsByUserkeyGridcreditsHistorical
       x-operation-id-source: derived
 components:
+  parameters:
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
+    startParam:
+      name: start
+      in: query
+      description: The start UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    deltaTParam:
+      name: delta_t
+      in: query
+      description: The number of seconds between each data point
+      required: false
+      schema:
+        type: integer
+        default: 300
+    endParam:
+      name: end
+      in: query
+      description: The end UNIX timestamp
+      required: false
+      schema:
+        type: integer
+    userkeyParam:
+      name: userkey
+      in: path
+      description: The userkey of the deployment to get data for
+      required: true
+      schema:
+        type: string
   schemas:
     MeterHistoricalP:
       type: object
@@ -194,48 +231,6 @@ components:
             type: array
             items:
               type: number
-    StreamComponent:
-      type: object
-      properties:
-        <uid>:
-          type: object
-          properties:
-            name:
-              type: string
-            phases:
-              type: object
-              properties:
-                <phase>:
-                  type: string
-    HouseHistorical:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            components:
-              $ref: '#/components/schemas/ComponentsResponse'
-            houseP:
-              type: array
-              items:
-                type: array
-                items:
-                  type: number
-    GenerationHistoricalP:
-      type: object
-      properties:
-        solarP:
-          type: array
-          items:
-            type: array
-            items:
-              type: number
-    BatteryCapacity:
-      type: object
-      properties:
-        batteryCapacity:
-          description: Battery capacity from 0.0 to 1.0 (0% to 100%)
-          type: number
     ComponentsResponse:
       type: object
       properties:
@@ -268,15 +263,12 @@ components:
               $ref: '#/components/schemas/StreamComponent'
             solar_streams_dc:
               $ref: '#/components/schemas/StreamComponent'
-    GridCreditsHistorical:
+    BatteryCapacity:
       type: object
       properties:
-        gridcredits:
-          type: array
-          items:
-            type: array
-            items:
-              type: number
+        batteryCapacity:
+          description: Battery capacity from 0.0 to 1.0 (0% to 100%)
+          type: number
     InverterHistoricalP:
       type: object
       properties:
@@ -286,6 +278,51 @@ components:
             type: array
             items:
               type: number
+    GenerationHistoricalP:
+      type: object
+      properties:
+        solarP:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    GridCreditsHistorical:
+      type: object
+      properties:
+        gridcredits:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    HouseHistorical:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            components:
+              $ref: '#/components/schemas/ComponentsResponse'
+            houseP:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+    StreamComponent:
+      type: object
+      properties:
+        <uid>:
+          type: object
+          properties:
+            name:
+              type: string
+            phases:
+              type: object
+              properties:
+                <phase>:
+                  type: string
     BatteryHistoricalSoC:
       type: object
       properties:
@@ -297,43 +334,6 @@ components:
             type: array
             items:
               type: number
-  parameters:
-    startParam:
-      name: start
-      in: query
-      description: The start UNIX timestamp
-      required: false
-      schema:
-        type: integer
-    deltaTParam:
-      name: delta_t
-      in: query
-      description: The number of seconds between each data point
-      required: false
-      schema:
-        type: integer
-        default: 300
-    endParam:
-      name: end
-      in: query
-      description: The end UNIX timestamp
-      required: false
-      schema:
-        type: integer
-    repositAuthHeader:
-      name: Reposit-Auth
-      in: header
-      description: The kind of authentication used (API or Stateless)
-      schema:
-        type: string
-        default: Stateless
-    userkeyParam:
-      name: userkey
-      in: path
-      description: The userkey of the deployment to get data for
-      required: true
-      schema:
-        type: string
   securitySchemes:
     bearerAuth:
       type: http
