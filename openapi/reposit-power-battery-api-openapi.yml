@@ -33,13 +33,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    userkeyParam:
-      name: userkey
-      in: path
-      description: The userkey of the deployment to get data for
-      required: true
-      schema:
-        type: string
     repositAuthHeader:
       name: Reposit-Auth
       in: header
@@ -47,6 +40,13 @@ components:
       schema:
         type: string
         default: Stateless
+    userkeyParam:
+      name: userkey
+      in: path
+      description: The userkey of the deployment to get data for
+      required: true
+      schema:
+        type: string
   schemas:
     BatteryCapacity:
       type: object

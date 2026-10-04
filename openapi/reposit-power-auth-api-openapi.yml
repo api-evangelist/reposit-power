@@ -78,27 +78,7 @@ paths:
       operationId: getV2Userkeys
       x-operation-id-source: derived
 components:
-  parameters:
-    repositAuthHeader:
-      name: Reposit-Auth
-      in: header
-      description: The kind of authentication used (API or Stateless)
-      schema:
-        type: string
-        default: Stateless
   schemas:
-    UserKeys:
-      type: object
-      properties:
-        userKeys:
-          type: array
-          items:
-            type: string
-    RefreshRequest:
-      type: object
-      properties:
-        refresh_token:
-          type: string
     RefreshResponse:
       type: object
       properties:
@@ -111,6 +91,13 @@ components:
           type: string
         password:
           type: string
+    UserKeys:
+      type: object
+      properties:
+        userKeys:
+          type: array
+          items:
+            type: string
     LoginResponse:
       type: object
       properties:
@@ -118,6 +105,19 @@ components:
           type: string
         expires_at:
           type: integer
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+  parameters:
+    repositAuthHeader:
+      name: Reposit-Auth
+      in: header
+      description: The kind of authentication used (API or Stateless)
+      schema:
+        type: string
+        default: Stateless
   securitySchemes:
     bearerAuth:
       type: http
