@@ -1,0 +1,12 @@
+{
+ "url": "https://api.repositpower.com/spec/",
+ "requested_url": "https://api.repositpower.com/spec/",
+ "status": 200,
+ "content_type": "application/octet-stream",
+ "bytes": 13459,
+ "sha256": "8c625fc294093f88445769c8c18b812be1d857065f70e8f12a38b43133c0e6dd",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
